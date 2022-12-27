@@ -1,0 +1,13 @@
+{
+  "name": "exam-auth0",
+  "version": "1.0.0",
+  "description": "Auth0 service for Exam project",
+  "main": "index.js",
+  "scripts": {
+    "build": "node build-config.js",
+    "deploy": "npm run build && node index.js -i . -c config.json"
+  },
+  "dependencies": {
+    "auth0-deploy-cli": "^5.3.2"
+  }
+}
