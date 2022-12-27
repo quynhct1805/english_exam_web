@@ -1,13 +1,9 @@
 <template lang="">
-    <div>
-        <h1>Home</h1>
-    </div>
+  <v-layout>
+    <AppBar />
+  </v-layout>
 </template>
-<script>
-export default {
-    name: 'Home'
-}
+<script setup lang="ts">
+import AppBar from "../components/AppBar.vue";
 </script>
-<style lang="">
-    
-</style>
+<style lang=""></style>

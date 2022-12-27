@@ -1,24 +1,24 @@
 <template>
   <v-app>
     <v-main>
-      <!-- <HelloWorld/> -->
+      <!-- <HelloWorld /> -->
       <router-view></router-view>
     </v-main>
   </v-app>
 </template>
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
+<script lang="ts">
+// import HelloWorld from "./components/HelloWorld.vue";
 
 export default {
-  name: 'App',
+  name: "App",
 
   components: {
-    HelloWorld,
+    // HelloWorld,
   },
 
   data: () => ({
     //
   }),
-}
+};
 </script>
