@@ -2,15 +2,17 @@ from . import Base
 import peewee as p
 
 
-class Users(Base):
+class Histories(Base):
     id = p.PrimaryKeyField()
-    fullname = p.TextField()
-    mobile = p.TextField()
-    email = p.TextField()
-    activestatus = p.BooleanField()
+    user_id = p.IntegerField()
+    test_id = p.IntegerField()
+    grade = p.IntegerField()
+    time = p.IntegerField()
+    created_at = p.DateField()
+    updated_at = p.DateField()
 
-    class Meta:
-        db_table = "users"
+    # class Meta:
+    #     db_table = "users"
 
     # @classmethod
     # def get_list(cls):

@@ -1,16 +1,20 @@
 from . import Base
 import peewee as p
+from tests import SkillTypeEnum
+from playhouse.postgres_ext import ArrayField
 
 
-class Users(Base):
+class Documentations(Base):
     id = p.PrimaryKeyField()
-    fullname = p.TextField()
-    mobile = p.TextField()
-    email = p.TextField()
-    activestatus = p.BooleanField()
+    name = p.TextField()
+    description = p.TextField()
+    files = ArrayField(field_class=p.TextField)
+    category_id = p.IntegerField()
+    skill = SkillTypeEnum()
+    created_at = p.TextField()
 
-    class Meta:
-        db_table = "users"
+    # class Meta:
+    #     db_table = "users"
 
     # @classmethod
     # def get_list(cls):

@@ -2,15 +2,14 @@ from . import Base
 import peewee as p
 
 
-class Users(Base):
+class Categories(Base):
     id = p.PrimaryKeyField()
-    fullname = p.TextField()
-    mobile = p.TextField()
-    email = p.TextField()
-    activestatus = p.BooleanField()
+    code = p.TextField()
+    name = p.TextField()
+    description = p.TextField()
 
-    class Meta:
-        db_table = "users"
+    # class Meta:
+    #     db_table = "users"
 
     # @classmethod
     # def get_list(cls):

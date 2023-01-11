@@ -3,43 +3,42 @@ from fastapi import APIRouter
 from typing import List
 from peewee import fn
 
-from models.users import Users
+from models.reviews import Reviews
 from pydantic import BaseModel
-from starlette.responses import Response
-from starlette.status import HTTP_204_NO_CONTENT
+from datetime import date
+
 
 router = APIRouter()
 
 
-class User(BaseModel):
-    activestatus: bool
-    fullname: str
-    mobile: str
-    email: str
+class Review(BaseModel):
+    user_id: int
+    test_id: int
+    rate_stars: int
+    comment: str
+    created_at: date
+    updated_at: date
 
 
-class UserPostRequest(BaseModel):
-    fullname: str
-    mobile: str
-    email: str
+@router.get("/reviews", tags=["Reviews"], respone_model=List[Review])
+async def get_all_reviews():
+    """Get all reviews"""
+    reviews = Reviews.select()
+    return reviews
 
 
-@router.get("/users", tags=["Users"], respone_model=List[User])
-async def get_all_users():
-    """Get all users"""
-    users = Users.select().order_by(Users.activestatus.desc(), fn.LOWER(Users.fullname))
-    return users
+@router.get("/reviews/{review_id}", tags=["Reviews"], respone_model=Review)
+async def get_review(review_id: int):
+    """Get review"""
+    review = Reviews.select().where(Reviews.id == review_id)
+    return review
 
 
-@router.get("/users/{user_id}", tags=["Users"], respone_model=User)
-async def get_user(user_id: int):
-    """Get user"""
-    user = (
-        Users.select()
-        .where(Users.id == user_id)
-        .order_by(Users.activestatus.desc(), fn.LOWER(Users.fullname))
-    )
-    return user
+@router.get("/reviews/{test_id}", tags=["Reviews"], respone_model=Review)
+async def get_review(test_id: int):
+    """Get review"""
+    review = Reviews.select().where(Reviews.test_id == test_id)
+    return review
 
 
 @router.post("/users", tags=["Users"], response_model=int)
@@ -80,8 +79,7 @@ async def edit_user(user_id: int, payload_: User):
 )
 async def delete_user(user_id: int):
     """Delete user"""
-    Users.delete(user_id).excute()
-    return Response(status_code=HTTP_204_NO_CONTENT)
+    user = Users.delete(user_id).excute()
 
 
 # fix

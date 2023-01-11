@@ -1,16 +1,20 @@
 from . import Base
 import peewee as p
+from playhouse.postgres_ext import ArrayField
 
 
-class Users(Base):
+class Questions(Base):
     id = p.PrimaryKeyField()
-    fullname = p.TextField()
-    mobile = p.TextField()
-    email = p.TextField()
-    activestatus = p.BooleanField()
+    name = p.TextField()
+    part_id = p.IntegerField()
+    test_id = p.IntegerField()
+    question = p.TextField()
+    answers = ArrayField(field_class=p.TextField)
+    true_answer = p.TextField()
+    explanation = p.TextField()
 
-    class Meta:
-        db_table = "users"
+    # class Meta:
+    #     db_table = "users"
 
     # @classmethod
     # def get_list(cls):

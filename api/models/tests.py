@@ -1,16 +1,27 @@
 from . import Base
 import peewee as p
+from enum import Enum
 
 
-class Users(Base):
+class SkillTypeEnum(str, Enum):
+    listen = "Listening"
+    read = "Reading"
+    speak = "Speaking"
+    write = "Writting"
+
+
+class Tests(Base):
     id = p.PrimaryKeyField()
-    fullname = p.TextField()
-    mobile = p.TextField()
-    email = p.TextField()
-    activestatus = p.BooleanField()
+    name = p.TextField()
+    total_part = p.IntegerField()
+    category_id = p.IntegerField()
+    description = p.TextField()
+    time = p.IntegerField()
+    skill = SkillTypeEnum()
+    total_ques = p.IntegerField()
 
-    class Meta:
-        db_table = "users"
+    # class Meta:
+    #     db_table = "users"
 
     # @classmethod
     # def get_list(cls):

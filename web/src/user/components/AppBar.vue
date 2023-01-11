@@ -7,7 +7,7 @@
 
     <v-toolbar-title>
       <v-avatar>
-        <v-img src="/logo.jpg" height="40px" cover></v-img>
+        <!-- <v-img src="/logo.jpg" height="40px" cover></v-img> -->
       </v-avatar>
       Thư viện
     </v-toolbar-title>

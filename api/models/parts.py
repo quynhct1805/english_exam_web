@@ -1,16 +1,18 @@
 from . import Base
 import peewee as p
+from enum import Enum
 
 
-class Users(Base):
+class Parts(Base):
     id = p.PrimaryKeyField()
-    fullname = p.TextField()
-    mobile = p.TextField()
-    email = p.TextField()
-    activestatus = p.BooleanField()
+    name = p.TextField()
+    question_id = p.IntegerField()
+    total_ques = p.IntegerField()
+    description = p.TextField()
+    time = p.IntegerField()
 
-    class Meta:
-        db_table = "users"
+    # class Meta:
+    #     db_table = "users"
 
     # @classmethod
     # def get_list(cls):

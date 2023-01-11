@@ -1,12 +1,13 @@
+from contextvars import ContextVar
+
 from playhouse.postgres_ext import PostgresqlExtDatabase
 from peewee import Model
 
-from contextvars import ContextVar
 
 db_context_var: ContextVar[PostgresqlExtDatabase] = ContextVar("db")
 
 psql_db = PostgresqlExtDatabase(
-    "miniproject",
+    "english_exam_db",
     user="postgres",
     password="postgres",
     host="db",
@@ -42,3 +43,8 @@ class PeeWeeBaseModel(Model):
         database = psql_db
         schema = "public"
         legacy_label_names = False
+
+
+class Base(Model):
+    class Meta:
+        database = db
