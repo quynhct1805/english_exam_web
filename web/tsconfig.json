@@ -1,28 +1,33 @@
-{
-  "extends": "@tsconfig/node17/tsconfig.json",
-  "include": ["src/**/*.ts", "src/**/*.vue"]
-}
-
 // {
-//   "compilerOptions": {
-//     "esModuleInterop": true,
-//     "target": "ESNext",
-//     "module": "ES2020",
-//     "moduleResolution": "node",
-//     "baseUrl": ".",
-//     "paths": {
-//       "@/*": ["./src/*"],
-//       "@vue/composition-api": ["./node_modules/vue"]
-//     },
-//     "allowJs": true,
-//     "outDir": "dist",
-//     "sourceMap": true,
-//     "resolveJsonModule": true,
-//     "jsx": "preserve"
-//   },
-//   "include": ["src/**/*.ts", "src/**/*.vue"],
-//   "vueCompilerOptions": {
-//     "target": 2.7,
-//     "plugins": ["@volar/vue-language-plugin-pug"]
-//   }
+//   "extends": "@tsconfig/node17/tsconfig.json",
+//   "include": ["src/**/*.ts", "src/**/*.vue"]
 // }
+
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "target": "ESNext",
+    "module": "ES2020",
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@vue/composition-api": ["./node_modules/vue"]
+    },
+    "allowJs": true,
+    "outDir": "dist",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "jsx": "preserve"
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.vue",
+    "src/plugins/axios.js",
+    "src/plugins/axios.js"
+  ],
+  "vueCompilerOptions": {
+    "target": 2.7,
+    "plugins": ["@volar/vue-language-plugin-pug"]
+  }
+}

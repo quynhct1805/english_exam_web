@@ -18,6 +18,7 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "src"),
     },
+    extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx", ".vue"],
   },
   /* remove the need to specify .vue files https://vitejs.dev/config/#resolve-extensions
   resolve: {
@@ -32,7 +33,7 @@ export default defineConfig({
     ]
   },
   */
-  resolve: {
-    extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx", ".vue"],
-  },
+  // resolve: {
+  //   extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx", ".vue"],
+  // },
 });

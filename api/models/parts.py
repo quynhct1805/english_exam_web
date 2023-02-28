@@ -1,15 +1,15 @@
 from . import Base
 import peewee as p
-from enum import Enum
 
 
 class Parts(Base):
     id = p.PrimaryKeyField()
     name = p.TextField()
-    question_id = p.IntegerField()
+    test_id = p.IntegerField()
     total_ques = p.IntegerField()
     description = p.TextField()
-    time = p.IntegerField()
+    audio = p.TextField()
+    paragraph = p.TextField()
 
     # class Meta:
     #     db_table = "users"

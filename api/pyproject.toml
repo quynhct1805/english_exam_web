@@ -1,17 +1,25 @@
 [tool.poetry]
 name = "api"
 version = "0.1.0"
-description = ""
-authors = ["quan"]
+description = "API"
+authors = ["quynhct"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.8"
 fastapi = "^0.75.0"
 uvicorn = "^0.17.6"
-peewee = "^3.14.10"
+peewee = "^3.15.4"
 psycopg2-binary = "^2.9.3"
+pydash = "^5.1.2"
+pytz = "^2022.7"
+python-dotenv = "^0.21.1"
+pydantic = {extras = ["email"], version = "^1.10.4"}
+
 
 [tool.poetry.dev-dependencies]
+pylint = "^2.15.10"
+mypy = "^0.790"
+uvicorn = {extras = ["standard"], version = "^0.20.0"}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

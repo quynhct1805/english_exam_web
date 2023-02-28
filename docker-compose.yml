@@ -6,21 +6,9 @@ services:
     user: "${COMPOSE_UID:-1000}:${COMPOSE_GID:-1000}"
     volumes:
       - ./web:/src/web
-      - ./web/src/user:/src/web/user
     ports:
       - "3000:3000"
-      - "3030:3000"
     command: ["npm", "run", "dev"]
-  # webuser:
-  #   build: docker/web
-  #   working_dir: /src/web
-  #   # user: "1000"
-  #   user: "${COMPOSE_UID:-1000}:${COMPOSE_GID:-1000}"
-  #   volumes:
-  #     - ./web/src/user:/src/web
-  #   ports:
-  #     - "3030:3000"
-  #   command: ["npm", "run", "dev"]
 
   api:
     build: docker/api
@@ -47,6 +35,7 @@ services:
       - POSTGRES_PASSWORD=postgres
 
   pgadmin:
+    container_name: exam_pgadmin
     image: dpage/pgadmin4
     environment:
       - PGADMIN_DEFAULT_EMAIL=pgadmin4@pgadmin.org

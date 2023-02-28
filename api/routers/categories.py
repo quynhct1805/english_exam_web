@@ -1,81 +1,102 @@
 from fastapi import APIRouter
 
-from playhouse.shortcuts import model_to_dict
+from typing import List, Optional
 from peewee import fn
 
 from models.categories import Categories
-from pydantic import BaseModel
+from pydantic import BaseModel, constr
 from models.tests import SkillTypeEnum
 from starlette.responses import Response
-from starlette.status import HTTP_204_NO_CONTENT
+from fastapi.exceptions import HTTPException
+from starlette.status import HTTP_204_NO_CONTENT, HTTP_404_NOT_FOUND
 
 router = APIRouter()
 
 
 class Category(BaseModel):
+    id: int
     code: str
     name: str
-    description: str
-
-
-class CategoryPostResponse(BaseModel):
-    id: int
+    description: str = None
 
 
 class CategoryPostRequest(BaseModel):
     code: str
     name: str
+    description: Optional[str]
 
 
 class CategoryPatchRequest(BaseModel):
     name: str
-    description: str
+    description: Optional[str]
 
 
-@router.get("/categories/", tags=["Categories"], respone_model=Category)
+@router.get("/api/categories", tags=["Categories"], response_model=List[Category])
 async def get_all_categories():
-    categories = Categories.select()
+    categories = (
+        Categories.select(fn.Upper(Categories.code).alias("code"), Categories)
+        .order_by(Categories.id)
+        .dicts()
+    )
+    categories = list(categories)
     return categories
 
 
-@router.get("/categories/{category_id}", tags=["Categories"], respone_model=Category)
+@router.get(
+    "/api/categories/{category_id}", tags=["Categories"], response_model=Category
+)
 async def get_category(category_id):
-    category = Categories.select().where(Categories.id == category_id)
+    categories = Categories.select().where(Categories.id == category_id).dicts()
+    categories = list(categories)
+    category = categories[0] if len(categories) > 0 else None
+    if not category:
+        raise HTTPException(HTTP_404_NOT_FOUND)
     return category
 
 
 @router.post(
-    "/categories/",
+    "/api/categories",
     tags=["Categories"],
     status_code=200,
-    response_model=CategoryPostResponse,
 )
 async def create_category(payload_: CategoryPostRequest):
-    # print(category)
+    category_codes = Categories.select(Categories.code).dicts()
+    category_codes = list(category_codes)
+    print("hi", category_codes)
     payload = payload_.dict()
+    for code in category_codes:
+        if code["code"] == payload["code"]:
+            print(11, code)
+            return {"code": 400, "message": "Mã thể loại đã tồn tại"}
+    print(2, payload)
     category = Categories.create(**payload)
-    return category
+    return {"id": category.id}
 
 
 @router.patch(
-    "/categories/{category_code}",
+    "/api/categories/{category_code}",
     tags=["Categories"],
     status_code=204,
 )
 async def update_category(category_code: str, category: CategoryPatchRequest):
-    print(category)
-    Categories.update(**category.dict()).where(
-        Categories.code == category_code
-    ).execute()
-    return "update category"
+    category = (
+        Categories.update(**category.dict())
+        .where(Categories.code == category_code)
+        .execute()
+    )
+    if not category:
+        raise HTTPException(HTTP_404_NOT_FOUND)
+    return Response(status_code=HTTP_204_NO_CONTENT)
 
 
 @router.delete(
-    "/categories/{category_id}",
+    "/api/categories/{category_id}",
     tags=["Categories"],
     status_code=204,
 )
 async def delete_category(category_id: int):
     """Delete category"""
-    Categories.delete(category_id).excute()
+    category = Categories.delete().where(Categories.id == category_id).execute()
+    if not category:
+        raise HTTPException(HTTP_404_NOT_FOUND)
     return Response(status_code=HTTP_204_NO_CONTENT)

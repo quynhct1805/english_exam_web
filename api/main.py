@@ -1,28 +1,40 @@
 from fastapi import FastAPI
-from peewee import JOIN
 
-from routers import users, login
+# from peewee import JOIN
+
+from routers import (
+    users,
+    categories,
+    documentations,
+    histories,
+    login,
+    parts,
+    questions,
+    reviews,
+    tests,
+)
 
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
-app.include_router(login.router)
-app.include_router(users.router)
-# app.include_router(books.router)
-# app.include_router(categories.router)
-# app.include_router(borrow_histories.router)
-# app.include_router(authors.router)
-# app.include_router(reviews.router)
+router = FastAPI()
+router.include_router(users.router)
+router.include_router(login.router)
+router.include_router(documentations.router)
+router.include_router(categories.router)
+router.include_router(histories.router)
+router.include_router(parts.router)
+router.include_router(reviews.router)
+router.include_router(questions.router)
+router.include_router(tests.router)
 
-app.add_middleware(
+router.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:8080",
         "http://localhost:8081",
-        "http://localhost:1500",
-        "http://172.20.0.3:1500",
-        "http://localhost:1600",
-        "http://172.20.0.2:1500",
+        "http://localhost:3000",
+        "http://192.168.64.3:3000",
+        "http://localhost:8000",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -30,7 +42,7 @@ app.add_middleware(
 )
 
 
-@app.get("/")
+@router.get("/")
 async def root():
     return {"message": "Hello Bigger Applications!"}
 

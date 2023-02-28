@@ -1,16 +1,16 @@
 from . import Base
 import peewee as p
-from tests import SkillTypeEnum
-from playhouse.postgres_ext import ArrayField
+from models.tests import SkillTypeEnum, EnumField
+from playhouse.postgres_ext import ArrayField, BinaryJSONField
 
 
 class Documentations(Base):
     id = p.PrimaryKeyField()
     name = p.TextField()
     description = p.TextField()
-    files = ArrayField(field_class=p.TextField)
+    files = BinaryJSONField()
     category_id = p.IntegerField()
-    skill = SkillTypeEnum()
+    skill = EnumField(choices=SkillTypeEnum)
     created_at = p.TextField()
 
     # class Meta:

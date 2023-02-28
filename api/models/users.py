@@ -4,13 +4,14 @@ import peewee as p
 
 class Users(Base):
     id = p.PrimaryKeyField()
-    fullname = p.TextField()
-    mobile = p.TextField()
-    email = p.TextField()
-    activestatus = p.BooleanField()
+    name = p.TextField(unique=True)
+    phone = p.TextField()
+    email = p.TextField(unique=True)
+    password = p.TextField()
+    role = p.TextField(default="member")
 
-    class Meta:
-        db_table = "users"
+    # class Meta:
+    #     db_table = "users"
 
     # @classmethod
     # def get_list(cls):

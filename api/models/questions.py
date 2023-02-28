@@ -7,11 +7,10 @@ class Questions(Base):
     id = p.PrimaryKeyField()
     name = p.TextField()
     part_id = p.IntegerField()
-    test_id = p.IntegerField()
     question = p.TextField()
     answers = ArrayField(field_class=p.TextField)
     true_answer = p.TextField()
-    explanation = p.TextField()
+    explaination = p.TextField()
 
     # class Meta:
     #     db_table = "users"

@@ -1,5 +1,6 @@
 from . import Base
 import peewee as p
+from playhouse.postgres_ext import DateTimeField
 
 
 class Reviews(Base):
@@ -8,8 +9,8 @@ class Reviews(Base):
     test_id = p.IntegerField()
     rate_stars = p.IntegerField()
     comment = p.TextField()
-    created_at = p.DateField()
-    updated_at = p.DateField()
+    created_at = DateTimeField(default=p.SQL("NOW()"))
+    updated_at = DateTimeField(default=p.SQL("NOW()"))
 
     # class Meta:
     #     db_table = "users"

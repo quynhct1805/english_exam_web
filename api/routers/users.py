@@ -1,96 +1,114 @@
 from fastapi import APIRouter
 
-from typing import List
-from peewee import fn
+from typing import List, Optional
+from datetime import datetime, date
 
 from models.users import Users
-from pydantic import BaseModel
+from models.histories import Histories
+from models.tests import Tests
+
+from pydantic import BaseModel, constr
+
 from starlette.responses import Response
-from starlette.status import HTTP_204_NO_CONTENT
+from fastapi.exceptions import HTTPException
+from starlette.status import HTTP_204_NO_CONTENT, HTTP_404_NOT_FOUND
 
 router = APIRouter()
 
 
 class User(BaseModel):
-    activestatus: bool
-    fullname: str
-    mobile: str
+    id: int
+    name: constr(min_length=1)
+    phone: str
+    email: constr(min_length=1)
+    role: str
+    password: constr(min_length=6)
+
+
+class UserPostResponse(BaseModel):
+    id: int
+
+
+class UserUpdateRequest(BaseModel):
+    name: str
+    phone: constr(min_length=9)
     email: str
+    role: str
+    password: Optional[constr(min_length=6)]
 
 
-class UserPostRequest(BaseModel):
-    fullname: str
-    mobile: str
-    email: str
+class UserHistories(BaseModel):
+    test: str
+    grade: int
+    time: int
+    created_at: date
 
 
-@router.get("/users", tags=["Users"], respone_model=List[User])
+class UserDetail(User):
+    histories: List[UserHistories]
+
+
+@router.get("/api/users", tags=["Users"], response_model=List[User])
 async def get_all_users():
     """Get all users"""
-    users = Users.select().order_by(Users.activestatus.desc(), fn.LOWER(Users.fullname))
+    users = Users.select().order_by(Users.id).dicts()
+    users = list(users)
     return users
 
 
-@router.get("/users/{user_id}", tags=["Users"], respone_model=User)
+@router.get("/api/users/{user_id}", tags=["Users"], response_model=UserDetail)
 async def get_user(user_id: int):
     """Get user"""
-    user = (
-        Users.select()
-        .where(Users.id == user_id)
-        .order_by(Users.activestatus.desc(), fn.LOWER(Users.fullname))
+    users = Users.select().where(Users.id == user_id).dicts()
+    users = list(users)
+    histories = (
+        Histories.select(Histories, Tests.name.alias("test"))
+        .join(Tests, on=Tests.id == Histories.test_id)
+        .where(Histories.user_id == user_id)
+        .dicts()
     )
+    user = users[0] if len(users) > 0 else None
+    if not user:
+        raise HTTPException(HTTP_404_NOT_FOUND)
+    user["histories"] = list(histories)
     return user
 
 
-@router.post("/users", tags=["Users"], response_model=int)
-async def create_user(payload_: UserPostRequest):
+@router.post(
+    "/api/users", tags=["Users"], status_code=200, response_model=UserPostResponse
+)
+async def create_user(payload_: UserUpdateRequest):
     """Create a new user"""
     payload = payload_.dict()
+    if payload["role"] is None:
+        payload["role"] = "member"
     user = Users.create(**payload)
-    return user
+    return {"id": user.id}
 
 
 @router.patch(
-    "/users/{user_id}",
+    "/api/users/{user_id}",
     tags=["Users"],
-    response_model=int,
     status_code=204,
 )
-async def edit_user(user_id: int, payload_: User):
+async def edit_user(user_id: int, payload_: UserUpdateRequest):
     """Update user info"""
     payload = payload_.dict()
-    user = (
-        Users.update(
-            activestatus=payload["activestatus"],
-            fullname=payload["fullname"],
-            mobile=payload["mobile"],
-            email=payload["email"],
-        )
-        .where(Users.id == user_id)
-        .execute()
-    )
-    # number of changed rows
-    return user
+    print(payload)
+    user = Users.update(**payload).where(Users.id == user_id).execute()
+    if not user:
+        raise HTTPException(HTTP_404_NOT_FOUND)
+    return Response(status_code=HTTP_204_NO_CONTENT)
 
 
 @router.delete(
-    "/users/{user_id}",
+    "/api/users/{user_id}",
     tags=["Users"],
     status_code=204,
 )
 async def delete_user(user_id: int):
     """Delete user"""
-    Users.delete(user_id).excute()
+    user = Users.delete().where(Users.id == user_id).execute()
+    if not user:
+        raise HTTPException(HTTP_404_NOT_FOUND)
     return Response(status_code=HTTP_204_NO_CONTENT)
-
-
-# fix
-@router.get("/users/{user_id}/{history_id}", tags=["Users"], respone_model=User)
-async def get_user_history(user_id: int, history_id: int):
-    """Get user's history"""
-    user = (
-        Users.select()
-        .where(Users.id == user_id)
-        .order_by(Users.activestatus.desc(), fn.LOWER(Users.fullname))
-    )
-    return user

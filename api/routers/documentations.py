@@ -1,84 +1,139 @@
 from fastapi import APIRouter
 
-from typing import List
+from typing import List, Optional
 from peewee import fn
 
 from models.documentations import Documentations
-from pydantic import BaseModel
+from models.categories import Categories
 from models.tests import SkillTypeEnum
+from routers.tests import SkillEnum
+
+from pydantic import BaseModel
+
 from starlette.responses import Response
-from starlette.status import HTTP_204_NO_CONTENT
+from fastapi.exceptions import HTTPException
+from starlette.status import HTTP_204_NO_CONTENT, HTTP_404_NOT_FOUND
 
 
 router = APIRouter()
 
 
-class Documentaion(BaseModel):
-    name = str
-    description = str
-    files = List[str]
-    category_id = int
-    skill = SkillTypeEnum
-    created_at = str
+# class File(BaseModel):
+#     name: str
+#     size: int
+
+
+class Documentation(BaseModel):
+    id: int
+    name: str
+    description: str = None
+    files: List[dict] = None
+    skill: SkillTypeEnum
+    category_id: int
+    category_code: str
+
+
+class DocumentationPostRequest(BaseModel):
+    name: str
+    category_id: int
+    skill: SkillEnum
+    files: Optional[List[dict]]
+    description: Optional[str]
+
+
+class DocumentationPostResponse(BaseModel):
+    id: int
+
+
+class DocumentationPatchRequest(BaseModel):
+    name: str
+    category_id: int
+    skill: SkillEnum
+    files: Optional[List[dict]]
+    description: Optional[str]
 
 
 @router.get(
-    "/documentations", tags=["Documentations"], respone_model=List[Documentaion]
+    "/api/documentations", tags=["Documentations"], response_model=List[Documentation]
 )
-async def get_all_decumentations():
-    """Get all reviews"""
-    documentations = Documentations.select()
+async def get_all_documentations():
+    """Get all documentations"""
+    documentations = (
+        Documentations.select(
+            Documentations, fn.Upper(Categories.code).alias("category_code")
+        )
+        .join(Categories, on=Categories.id == Documentations.category_id)
+        .order_by(Documentations.id)
+    )
+    documentations = list(documentations.dicts())
     return documentations
 
 
 @router.get(
-    "/documentations/{documentation_id}",
+    "/api/documentations/{documentation_id}",
     tags=["Documentations"],
-    respone_model=Documentations,
+    response_model=Documentation,
 )
 async def get_documentation(documentation_id: int):
     """Get documentation"""
-    documentation = Documentations.select().where(Documentations.id == documentation_id)
+    documentations = (
+        Documentations.select(
+            Documentations, fn.Upper(Categories.code).alias("category_code")
+        )
+        .join(Categories, on=Categories.id == Documentations.category_id)
+        .where(Documentations.id == documentation_id)
+    )
+    documentations = list(documentations.dicts())
+    documentation = documentations[0] if len(documentations) > 0 else None
+    if not documentation:
+        raise HTTPException(HTTP_404_NOT_FOUND)
+
     return documentation
 
 
-@router.post("/documentations", tags=["Documentations"], response_model=int)
-async def create_documentation(payload_: UserPostRequest):
+@router.post(
+    "/api/documentations",
+    tags=["Documentations"],
+    response_model=DocumentationPostResponse,
+)
+async def create_documentation(payload_: DocumentationPostRequest):
     """Create a new documentation"""
     payload = payload_.dict()
     documentation = Documentations.create(**payload)
-    return documentation
+    return {"id": documentation.id}
 
 
 @router.patch(
-    "/documentations/{documentation_id}",
+    "/api/documentations/{documentation_id}",
     tags=["Documentations"],
-    response_model=int,
     status_code=204,
 )
-async def edit_documentation(documentation_id: int, payload_: User):
+async def edit_documentation(
+    documentation_id: int, payload_: DocumentationPatchRequest
+):
     """Update documentation info"""
     payload = payload_.dict()
+
     documentation = (
-        Documentations.update(
-            activestatus=payload["activestatus"],
-            fullname=payload["fullname"],
-            mobile=payload["mobile"],
-            email=payload["email"],
-        )
+        Documentations.update(**payload)
         .where(Documentations.id == documentation_id)
         .execute()
     )
-    # number of changed rows
-    return documentation
+    if not documentation:
+        raise HTTPException(HTTP_404_NOT_FOUND)
+    return Response(status_code=HTTP_204_NO_CONTENT)
 
 
 @router.delete(
-    "/documentations/{documentation_id}",
-    tags=["Users"],
+    "/api/documentations/{documentation_id}",
+    tags=["Documentations"],
     status_code=204,
 )
 async def delete_documentation(documentation_id: int):
     """Delete documentation"""
-    Documentations.delete(documentation_id).excute()
+    documentation = (
+        Documentations.delete().where(Documentations.id == documentation_id).execute()
+    )
+    if not documentation:
+        raise HTTPException(HTTP_404_NOT_FOUND)
     return Response(status_code=HTTP_204_NO_CONTENT)

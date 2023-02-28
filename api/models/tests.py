@@ -3,21 +3,37 @@ import peewee as p
 from enum import Enum
 
 
-class SkillTypeEnum(str, Enum):
-    listen = "Listening"
-    read = "Reading"
-    speak = "Speaking"
-    write = "Writting"
+class EnumField(p.CharField):
+    """
+    This class enable a Enum like field for Peewee
+    """
+
+    def __init__(self, choices, *args, **kwargs):
+        super(p.CharField, self).__init__(*args, **kwargs)
+        self.choices = choices
+
+    def db_value(self, value):
+        return value
+
+    def python_value(self, value):
+        return self.choices(value)
+
+
+class SkillTypeEnum(Enum):
+    LISTENING = "Listening"
+    READING = "Reading"
+    SPEAKING = "Speaking"
+    WRITING = "Writing"
 
 
 class Tests(Base):
     id = p.PrimaryKeyField()
     name = p.TextField()
     total_part = p.IntegerField()
-    category_id = p.IntegerField()
+    category_id = p.IntegerField(default=1)
     description = p.TextField()
     time = p.IntegerField()
-    skill = SkillTypeEnum()
+    skill = EnumField(choices=SkillTypeEnum)
     total_ques = p.IntegerField()
 
     # class Meta:
