@@ -1,0 +1,46 @@
+{
+  "python.analysis.typeCheckingMode": "off",
+  // "python.testing.pytestEnabled": true,
+  "python.pythonPath": ".venv/bin/python",
+  "python.envFile": "${workspaceFolder}/.vscode/.pythonenv",
+  // Allow code navigation outside dev container
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}/.venv/lib/python3.8/site-packages"
+  ],
+  // "python.formatting.provider": "black",
+  "[python]": {
+    "editor.formatOnSave": true
+  },
+  "search.exclude": {
+    "htmlcov": true,
+    ".venv": true
+  },
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/__pycache__": true,
+    "**/.pytest_cache": true,
+    "**/.mypy_cache": true
+  },
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/**": true,
+    "**/.hg/store/**": true,
+    "**/.venv/**": true,
+    "**/__pycache__/**": true,
+    "**/.pytest_cache/**": true,
+    "**/.mypy_cache/**": true
+  },
+  "python.linting.pylintEnabled": true,
+  "python.linting.enabled": true,
+  "python.languageServer": "Pylance",
+  "python.testing.pytestArgs": ["-vv"],
+  "python.linting.mypyEnabled": true,
+  "python.analysis.diagnosticsSeverityOverrides": {
+    "reportMissingImports": "none"
+  }
+}

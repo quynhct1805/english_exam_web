@@ -1,57 +1,114 @@
 from fastapi import APIRouter
 
-from playhouse.shortcuts import model_to_dict
-from peewee import fn
+from typing import List, Optional
+from datetime import datetime, date
 
 from models.users import Users
-from pydantic import BaseModel
+from models.histories import Histories
+from models.tests import Tests
+
+from pydantic import BaseModel, constr
+
+from starlette.responses import Response
+from fastapi.exceptions import HTTPException
+from starlette.status import HTTP_204_NO_CONTENT, HTTP_404_NOT_FOUND
 
 router = APIRouter()
 
 
 class User(BaseModel):
-    activestatus: bool
-    fullname: str
-    mobile: str
+    id: int
+    name: constr(min_length=1)
+    phone: str
+    email: constr(min_length=1)
+    role: str
+    password: constr(min_length=6)
+
+
+class UserPostResponse(BaseModel):
+    id: int
+
+
+class UserUpdateRequest(BaseModel):
+    name: str
+    phone: constr(min_length=9)
     email: str
+    role: str
+    password: Optional[constr(min_length=6)]
 
 
-@router.get("/api/users")
-def get_all_users():
+class UserHistories(BaseModel):
+    test: str
+    grade: int
+    time: int
+    created_at: date
+
+
+class UserDetail(User):
+    histories: List[UserHistories]
+
+
+@router.get("/api/users", tags=["Users"], response_model=List[User])
+async def get_all_users():
     """Get all users"""
-    users = Users.select().order_by(Users.activestatus.desc(), fn.LOWER(Users.fullname))
-    users = [model_to_dict(user) for user in users]
+    users = Users.select().order_by(Users.id).dicts()
+    users = list(users)
     return users
 
 
-@router.post("/api/users", response_model=int)
-def create_user(payload_: User):
-    """Create a new user"""
-    payload = payload_.dict()
-    user = Users.create(**payload)
-    return user.id
-
-
-@router.patch("/api/users/{id}", response_model=int)
-def edit_user(id: int, payload_: User):
-    """Update user info"""
-    payload = payload_.dict()
-    user = (
-        Users.update(
-            activestatus=payload["activestatus"],
-            fullname=payload["fullname"],
-            mobile=payload["mobile"],
-            email=payload["email"],
-        )
-        .where(Users.id == id)
-        .execute()
+@router.get("/api/users/{user_id}", tags=["Users"], response_model=UserDetail)
+async def get_user(user_id: int):
+    """Get user"""
+    users = Users.select().where(Users.id == user_id).dicts()
+    users = list(users)
+    histories = (
+        Histories.select(Histories, Tests.name.alias("test"))
+        .join(Tests, on=Tests.id == Histories.test_id)
+        .where(Histories.user_id == user_id)
+        .dicts()
     )
-    # number of changed rows
+    user = users[0] if len(users) > 0 else None
+    if not user:
+        raise HTTPException(HTTP_404_NOT_FOUND)
+    user["histories"] = list(histories)
     return user
 
 
-@router.delete("/api/users/{id}")
-def user_employee(id: int):
+@router.post(
+    "/api/users", tags=["Users"], status_code=200, response_model=UserPostResponse
+)
+async def create_user(payload_: UserUpdateRequest):
+    """Create a new user"""
+    payload = payload_.dict()
+    if payload["role"] is None:
+        payload["role"] = "member"
+    user = Users.create(**payload)
+    return {"id": user.id}
+
+
+@router.patch(
+    "/api/users/{user_id}",
+    tags=["Users"],
+    status_code=204,
+)
+async def edit_user(user_id: int, payload_: UserUpdateRequest):
+    """Update user info"""
+    payload = payload_.dict()
+    print(payload)
+    user = Users.update(**payload).where(Users.id == user_id).execute()
+    if not user:
+        raise HTTPException(HTTP_404_NOT_FOUND)
+    return Response(status_code=HTTP_204_NO_CONTENT)
+
+
+@router.delete(
+    "/api/users/{user_id}",
+    tags=["Users"],
+    status_code=204,
+)
+async def delete_user(user_id: int):
     """Delete user"""
-    user = Users.get_by_id(id)
-    user.delete_instance()
+    user = Users.delete().where(Users.id == user_id).execute()
+    if not user:
+        raise HTTPException(HTTP_404_NOT_FOUND)
+    return Response(status_code=HTTP_204_NO_CONTENT)

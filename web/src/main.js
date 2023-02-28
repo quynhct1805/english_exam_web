@@ -2,8 +2,8 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import vuetify from "./plugins/vuetify";
 import { loadFonts } from "./plugins/webfontloader";
-import { createRouter, createWebHistory } from "vue-router";
-import Home from "./components/Home.vue";
+// import { createRouter, createWebHistory } from "vue-router";
+// import Home from "./user/components/Home.vue";
 // import About from './components/About.vue'
 import router from "./router";
 
