@@ -19,9 +19,9 @@ class Question(BaseModel):
     part_id: int
     part_name: str
     question: str
-    answers: List[str]
-    true_answer: str
-    explaination: str
+    answers: List[str] = None
+    true_answer: str = None
+    explaination: str = None
 
 
 class QuestionPostResponse(BaseModel):

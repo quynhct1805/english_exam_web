@@ -11,13 +11,6 @@
     <div class="main">
       <div class="content">
         Hướng dẫn
-        <!-- <div>test: {{ test }}</div>
-        <div>parts:{{ parts }}</div>
-        <br />
-        <div>result: {{ result }}</div>
-        <br />
-        <div>{{ userAnswers }}</div>
-        <div>{{ trueAnswers }}</div> -->
         <div v-for="part in parts">
           <audio controls class="mx-3 my-1" v-if="part.id == choosingPart">
             <source
@@ -50,7 +43,10 @@
             <v-card-title class="question-number">{{ ques.name }}</v-card-title>
             <v-card-content class="question-content">
               <span>{{ ques.question }}</span>
-              <v-radio-group hide-details v-model="userAnswers[ques.id]">
+              <v-radio-group
+                hide-details
+                v-model="userAnswers[parseInt(ques.name)]"
+              >
                 <v-radio
                   v-for="(ans, idx) in ques.answers"
                   :label="ans"
@@ -63,14 +59,12 @@
       </div>
       <v-card class="navigation">
         <div>
-          Thời gian làm bài: <span id="m">Phút</span> :
-          <span id="s">Giây</span>
+          Thời gian còn lại:
+          <div class="time-left-container">
+            <span class="time-left-label">{{ timeLeftString }}</span>
+          </div>
         </div>
-        <v-btn
-          class="submit-btn"
-          variant="outlined"
-          @click="submitBtn(), checkAnswers()"
-        >
+        <v-btn class="submit-btn" variant="outlined" @click="submitBtn()">
           Nộp bài
         </v-btn>
         <v-list class="question-list">
@@ -89,12 +83,20 @@
       </v-card>
     </div>
   </v-container>
+  <v-snackbar v-model="snackbar" :timeout="timeout">
+    {{ noti }}
+    <template v-slot:actions>
+      <v-btn color="blue" variant="text" @click="snackbar = false">
+        Đóng
+      </v-btn>
+    </template>
+  </v-snackbar>
 </template>
 
 <script setup>
 import api from "@/plugins/url";
 import { ref, onMounted, computed } from "vue";
-// import { useStore } from "@/components/store/users";
+// import { useStore } from "@/components/store/store";
 import AppBar from "@/components/common/AppBar";
 import { useRouter } from "vue-router";
 
@@ -103,7 +105,7 @@ const props = defineProps({
 });
 
 // const store = useStore();
-// const { user, getUser, userId } = store;
+// const { user, getUser } = store;
 const router = useRouter();
 const test = ref({});
 const parts = ref([]);
@@ -112,30 +114,68 @@ const userAnswers = ref([]);
 const trueAnswers = ref([]);
 const result = ref({});
 const choosingPart = ref(0);
-// const audio = ref("01-AudioTrack 01");
 
+// remind about time
+const snackbar = ref(false);
+const noti = ref("Thời gian làm bài sắp hết!");
+const timeout = ref(3000);
+
+// the timer
+const timeElapsed = ref(0);
+const timerInterval = ref(undefined);
+const timeLimit = ref(20);
+
+const padToTwo = (num) => {
+  // e.g. 4 -> '04'
+  return String(num).padStart(2, "0");
+};
+const timeLeft = computed(() => {
+  return timeLimit.value - timeElapsed.value;
+});
+
+const timeLeftString = computed(() => {
+  const minutes = Math.floor(timeLeft.value / 60);
+  const seconds = timeLeft.value % 60;
+  return `${padToTwo(minutes)}:${padToTwo(seconds)}`;
+});
+
+const startTimer = () => {
+  timerInterval.value = setInterval(() => {
+    // Stop counting when there is no more time left
+    if (++timeElapsed.value === timeLimit.value) {
+      clearInterval(timerInterval.value);
+      checkAnswers();
+      api.post(`/api/histories`, result.value);
+      router.replace(`/tests/${props.id}`);
+    }
+    if (timeLeft.value === 300) snackbar.value = true;
+  }, 1000);
+};
+
+// out do test not save grade
 const outBtn = () => {
   const respone = confirm(
     "Bạn có muốn thoát làm bài - Kết quả sẽ không được lưu"
   );
   // cancel -> respone = false
-  console.log(respone);
   if (respone) {
-    router.replace(`/tests/${props.id}`);
-  }
-};
-const submitBtn = () => {
-  const respone = confirm("Bạn có muốn nộp bài làm - Kết quả sẽ được lưu");
-  // console.log(JSON.parse(JSON  .stringify(result.value)));
-  if (respone) {
-    checkAnswers();
-    api.post(`/api/histories`, result.value).then((res) => {
-      // console.log(res.data);
-    });
+    clearInterval(timerInterval.value);
     router.replace(`/tests/${props.id}`);
   }
 };
 
+// submit test
+const submitBtn = () => {
+  const respone = confirm("Bạn có muốn nộp bài làm - Kết quả sẽ được lưu");
+  if (respone) {
+    checkAnswers();
+    api.post(`/api/histories`, result.value);
+    clearInterval(timerInterval.value);
+    router.replace(`/tests/${props.id}`);
+  }
+};
+
+// check answers of user
 const checkAnswers = () => {
   const grade = ref(0);
   const tempUserAnswers = JSON.parse(JSON.stringify(userAnswers.value));
@@ -145,10 +185,13 @@ const checkAnswers = () => {
       grade.value += 1;
     }
   }
+  result.value.time = timeElapsed.value;
   result.value.grade = grade.value;
+  result.value.answers = tempUserAnswers.slice(1, tempUserAnswers.length);
 };
 
 onMounted(() => {
+  startTimer();
   result.value = {
     user_id: localStorage.id,
     test_id: props.id,
@@ -156,6 +199,7 @@ onMounted(() => {
     time: 0,
   };
   api.get(`/api/tests/${props.id}`).then((res) => {
+    timeLimit.value = res.data.time;
     test.value = res.data;
   });
   api.get(`/api/tests/${props.id}/parts`).then((res) => {
@@ -208,6 +252,7 @@ onMounted(() => {
   height: fit-content;
   position: fixed;
   right: 136px;
+  margin-top: 28px;
 }
 .do-test {
   max-height: 800px;
@@ -251,5 +296,9 @@ onMounted(() => {
   padding-left: 0;
   font-size: 1.1rem;
   font-weight: 600;
+}
+.time-left-container {
+  font-weight: 600;
+  font-size: 1.2rem;
 }
 </style>

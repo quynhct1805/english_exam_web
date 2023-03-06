@@ -51,7 +51,6 @@ export function useStore() {
   };
 
   const getUser = (userId: number) => {
-    console.log(userId);
     api.get(`/api/users/${userId}`).then((res) => {
       user.value = res.data;
     });

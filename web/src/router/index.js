@@ -48,6 +48,18 @@ const routes = [
     // props: router => ({id: router.params.id})
   },
   {
+    path: "/forgotpassword",
+    name: "ForgotPassword",
+    component: () => import("@/components/common/ForgotPassword"),
+    // props: router => ({id: router.params.id})
+  },
+  {
+    path: "/changepassword",
+    name: "ChangePassword",
+    component: () => import("@/components/common/ChangePassword"),
+    // props: (router) => ({ userId: router.params.userId }),
+  },
+  {
     path: "/admin/tests",
     name: "ManageTest",
     component: () => import("@/components/admin/ManageTest"),
@@ -94,6 +106,12 @@ const routes = [
     name: "ProfilePage",
     component: () => import("@/components/common/Profile"),
     props: (router) => ({ id: router.params.userId }),
+  },
+  {
+    path: "/history/:historyId",
+    name: "HistoryDetail",
+    component: () => import("@/components/user/HistoryTest"),
+    props: (router) => ({ id: router.params.historyId }),
   },
 ];
 

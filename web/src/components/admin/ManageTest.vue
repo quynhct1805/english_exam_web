@@ -23,26 +23,38 @@
           <v-text-field
             class="search-input"
             :loading="loading"
+            v-model="search"
             variant="underlined"
-            label="Nhập từ khoá tìm kiếm: dạng câu hỏi ..."
+            label="Nhập từ khoá tìm kiếm: tên đề"
             prepend-inner-icon="mdi-magnify"
+            hide-no-data
             single-line
             hide-details
-            @click:append-inner="onClick"
           ></v-text-field>
           <v-spacer />
           <v-select
+            v-model="filterSkill"
             class="select-input"
-            label="Chọn bộ đề thi"
-            :items="test"
+            label="Chọn kỹ năng"
+            :items="skill"
             variant="underlined"
             hide-details
-            item-title="name"
-            item-value="id"
+            clearable
+          ></v-select>
+          <v-spacer />
+          <v-select
+            v-model="filterCate"
+            class="select-input"
+            label="Chọn thể loại đề"
+            :items="categories"
+            item-title="code"
+            item-value="code"
+            variant="underlined"
+            hide-details
+            clearable
           ></v-select>
         </v-container>
         <v-container style="display: flex; margin-bottom: 12px">
-          <v-btn variant="tonal" color="#21385a">Tìm kiếm</v-btn>
           <v-spacer />
           <v-btn
             variant="outlined"
@@ -58,7 +70,7 @@
         </v-container>
       </div>
 
-      <v-table class="manage-test" :key="tests.length">
+      <v-table class="manage-test" :key="items.length">
         <v-row class="title">
           <v-col class="text-center" cols="1">STT</v-col>
           <v-col class="text-center" cols="2">Thể loại</v-col>
@@ -70,7 +82,7 @@
         </v-row>
         <v-divider></v-divider>
 
-        <v-row class="content" v-for="(test, index) in tests" :key="test.id">
+        <v-row class="content" v-for="(test, index) in items" :key="test.id">
           <router-link
             :to="{ name: 'ManageDetailTest', params: { testId: test.id } }"
           >
@@ -117,9 +129,13 @@
 
 <script setup>
 import api from "@/plugins/url";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import AppBar from "@/components/admin/AppBar";
 import TestForm from "./TestForm.vue";
+import { useStore } from "@/components/store/store";
+
+const store = useStore();
+const { skill } = store;
 
 const categories = ref([]);
 const tests = ref([]);
@@ -127,6 +143,11 @@ const tests = ref([]);
 const openDialog = ref(false);
 const action = ref("");
 const testInfo = ref({});
+const items = ref([]);
+const search = ref(null);
+const loading = ref(false);
+const filterCate = ref(null);
+const filterSkill = ref(null);
 
 const deleteTest = (testId) => {
   api.delete(`/api/tests/${testId}`).then((res) => console.log(res));
@@ -134,21 +155,63 @@ const deleteTest = (testId) => {
 
 onMounted(() => {
   api.get("/api/tests").then((res) => {
-    console.log(res.data);
     tests.value = res.data;
+    items.value = res.data;
   });
   api.get("/api/categories").then((res) => {
     categories.value = res.data;
-    // console.log(res.data);
   });
 });
 
-const loaded = ref(false);
-const loading = ref(false);
+watch(search, (newVal) => {
+  items.value = JSON.parse(JSON.stringify(tests.value)).filter((e) => {
+    return (
+      (e.name || "").toLowerCase().indexOf((newVal || "").toLowerCase()) > -1
+    );
+  });
+});
 
-const onClick = () => {
-  loading.value = true;
-};
+watch(filterCate, (newVal) => {
+  if (!!filterSkill.value) {
+    items.value = JSON.parse(JSON.stringify(tests.value)).filter((e) => {
+      return (
+        (e.skill || "")
+          .toLowerCase()
+          .indexOf((filterSkill.value || "").toLowerCase()) > -1 &&
+        (e.category_code || "")
+          .toLowerCase()
+          .indexOf((newVal || "").toLowerCase()) > -1
+      );
+    });
+  } else {
+    items.value = JSON.parse(JSON.stringify(tests.value)).filter((e) => {
+      return (
+        (e.category_code || "")
+          .toLowerCase()
+          .indexOf((newVal || "").toLowerCase()) > -1
+      );
+    });
+  }
+});
+watch(filterSkill, (newVal) => {
+  if (!!filterCate.value) {
+    items.value = JSON.parse(JSON.stringify(tests.value)).filter((e) => {
+      return (
+        (e.skill || "").toLowerCase().indexOf((newVal || "").toLowerCase()) >
+          -1 &&
+        (e.category_code || "")
+          .toLowerCase()
+          .indexOf((filterCate.value || "").toLowerCase()) > -1
+      );
+    });
+  } else {
+    items.value = JSON.parse(JSON.stringify(tests.value)).filter((e) => {
+      return (
+        (e.skill || "").toLowerCase().indexOf((newVal || "").toLowerCase()) > -1
+      );
+    });
+  }
+});
 </script>
 
 <style scoped>
@@ -168,7 +231,7 @@ const onClick = () => {
   background-color: #e8ebf3;
 }
 .main .search-input {
-  width: 50%;
+  width: 40%;
 }
 .main .select-input {
   width: 20%;

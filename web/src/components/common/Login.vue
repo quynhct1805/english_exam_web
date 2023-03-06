@@ -23,6 +23,7 @@
               messages="* Mật khẩu ít nhất 6 ký tự."
               :rules="(ruleCommon, passwordRules)"
             />
+
             <v-checkbox
               class="save"
               density="comfortable"
@@ -30,6 +31,12 @@
               label="Lưu mật khẩu"
               hide-details
             ></v-checkbox>
+            <router-link
+              :to="{ name: 'ForgotPassword' }"
+              style="color: #283c74"
+            >
+              Quên mật khẩu
+            </router-link>
           </v-card-text>
           <v-alert class="alert" v-if="showAlert" type="error" v-model="error">
             {{ error }}

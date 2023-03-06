@@ -8,6 +8,7 @@ class Users(Base):
     phone = p.TextField()
     email = p.TextField(unique=True)
     password = p.TextField()
+    code = p.TextField()
     role = p.TextField(default="member")
 
     # class Meta:

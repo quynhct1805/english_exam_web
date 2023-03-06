@@ -6,6 +6,7 @@ from datetime import datetime, date
 from models.users import Users
 from models.histories import Histories
 from models.tests import Tests
+from routers.histories import History
 
 from pydantic import BaseModel, constr
 
@@ -22,6 +23,7 @@ class User(BaseModel):
     phone: str
     email: constr(min_length=1)
     role: str
+    code: str = None
     password: constr(min_length=6)
 
 
@@ -34,13 +36,16 @@ class UserUpdateRequest(BaseModel):
     phone: constr(min_length=9)
     email: str
     role: str
+    code: Optional[str]
     password: Optional[constr(min_length=6)]
 
 
 class UserHistories(BaseModel):
+    id: int
     test: str
     grade: int
     time: int
+    answers: List[Optional[str]]
     created_at: date
 
 

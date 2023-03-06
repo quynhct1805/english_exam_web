@@ -24,14 +24,12 @@
             class="search-input"
             :loading="loading"
             variant="underlined"
-            label="Nhập từ khoá tìm kiếm: dạng câu hỏi ..."
+            label="Nhập từ khoá tìm kiếm: tên đề, kỹ năng"
             prepend-inner-icon="mdi-magnify"
             single-line
             hide-details
             @click:append-inner="onClick"
           ></v-text-field>
-          <v-spacer />
-          <v-btn variant="tonal" color="#21385a">Tìm kiếm</v-btn>
         </v-container>
         <v-container
           style="display: flex; margin-bottom: 12px; align-items: end"
@@ -127,11 +125,6 @@ const { documentations, getDocumentations, categories, getCategories } = store;
 // const categories = ref([]);
 // const documentations = ref([]);
 const length = ref(0);
-const test = ref([
-  { id: 1, name: "mot" },
-  { id: 2, name: "hai" },
-  { id: 3, name: "ba" },
-]);
 
 const openDialog = ref(false);
 const action = ref("");
@@ -160,14 +153,12 @@ const deleteDocumentation = (documentationId) => {
 onMounted(() => {
   getDocumentations();
   getCategories();
-  console.log(documentations);
 });
 
 const loaded = ref(false);
 const loading = ref(false);
 
 watch(documentations.value.length, (value) => {
-  console.log(value);
   getDocumentations();
 });
 

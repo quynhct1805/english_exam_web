@@ -157,6 +157,7 @@ onMounted(() => {
 });
 
 const createDocumentation = (param) => {
+  console.log(param);
   api.post("/api/documentations", param).then((res) => {
     console.log(res.data);
     // tests.value = res.data;
@@ -164,6 +165,7 @@ const createDocumentation = (param) => {
 };
 
 const updateDocumentation = (param) => {
+  console.log(param);
   api
     .patch(`/api/documentations/${documentation.value.id}`, param)
     .then((res) => {
@@ -174,13 +176,14 @@ const updateDocumentation = (param) => {
 
 function handledClickSave() {
   const param = JSON.parse(JSON.stringify(documentation.value));
-  console.log(files);
   console.log(files.value);
+  console.log(documentation.value);
+  console.log(param);
   for (const file of files.value) {
     param.files.push(file);
   }
   // param.files.push(files.value);
-  console.log(param.files);
+  console.log(param);
   if (_.isEmpty(param) || !param.name || !param.category_id || !param.skill) {
     showAlert.value = true;
     error.value = "Vui lòng nhập thông tin bắt buộc!";

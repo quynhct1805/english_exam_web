@@ -4,46 +4,7 @@
     <!-- <span>List test</span> -->
     <div class="main manage-test">
       <div class="content-header">
-        <v-chip-group>
-          <router-link :to="{ name: 'ManageTest' }">
-            <v-chip variant="outlined" value="all"> Tất cả </v-chip>
-          </router-link>
-
-          <router-link
-            v-for="category in categories"
-            :key="category.id"
-            :to="{ name: 'ManageTest' }"
-          >
-            <v-chip variant="outlined" :value="`${category.id}`">
-              {{ category.code }}
-            </v-chip>
-          </router-link>
-        </v-chip-group>
         <v-container style="display: flex; margin-bottom: 12px">
-          <v-text-field
-            class="search-input"
-            :loading="loading"
-            variant="underlined"
-            label="Nhập từ khoá tìm kiếm: dạng câu hỏi ..."
-            prepend-inner-icon="mdi-magnify"
-            single-line
-            hide-details
-            @click:append-inner="onClick"
-          ></v-text-field>
-          <v-spacer />
-          <v-select
-            class="select-input"
-            label="Chọn bộ đề thi"
-            :items="test"
-            variant="underlined"
-            hide-details
-            item-title="name"
-            item-value="id"
-          ></v-select>
-        </v-container>
-        <v-container style="display: flex; margin-bottom: 12px">
-          <v-btn variant="tonal" color="#21385a">Tìm kiếm</v-btn>
-          <v-spacer />
           <v-btn
             variant="outlined"
             color="success"
@@ -135,13 +96,6 @@ const deleteCategory = (categoryId) => {
 onMounted(() => {
   getCategories();
 });
-
-const loaded = ref(false);
-const loading = ref(false);
-
-const onClick = () => {
-  loading.value = true;
-};
 </script>
 
 <style scoped>
@@ -161,7 +115,7 @@ const onClick = () => {
   background-color: #e8ebf3;
 }
 .main .search-input {
-  width: 50%;
+  width: 40%;
 }
 .main .select-input {
   width: 20%;

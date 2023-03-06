@@ -22,7 +22,7 @@
           class="search-input"
           :loading="loading"
           variant="underlined"
-          placeholder="Nhập từ khoá tìm kiếm: dạng câu hỏi ..."
+          placeholder="Nhập từ khoá tìm kiếm: tên đề, kỹ năng"
           prepend-inner-icon="mdi-magnify"
           single-line
           hide-details
@@ -31,7 +31,7 @@
         <v-spacer />
         <v-select
           class="select-input"
-          placeholder="Chọn bộ đề thi"
+          placeholder="Chọn thể loại đề"
           :items="test"
           variant="underlined"
           hide-details
@@ -39,7 +39,6 @@
           item-value="id"
         ></v-select>
       </v-container>
-      <v-btn variant="tonal" color="#21385a">Tìm kiếm</v-btn>
       <Documentation />
       <!-- <span>{{ tests }}</span> -->
       <!-- <div class="documentation-info">
@@ -75,11 +74,6 @@ import Documentation from "@/components/common/Documentation";
 
 const categories = ref([]);
 const documentations = ref([]);
-const test = ref([
-  { id: 1, name: "mot" },
-  { id: 2, name: "hai" },
-  { id: 3, name: "ba" },
-]);
 
 onMounted(() => {
   api.get("/api/documentations").then((res) => {
@@ -111,7 +105,7 @@ const onClick = () => {
   background-color: #e8ebf3;
 }
 .main .search-input {
-  width: 50%;
+  width: 40%;
 }
 .main .select-input {
   width: 20%;

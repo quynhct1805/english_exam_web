@@ -15,7 +15,7 @@
         <v-chip variant="outlined" value="info"> Thông tin đề thi </v-chip>
         <v-chip variant="outlined" value="answer"> Đáp án/Trancript </v-chip>
       </v-chip-group>
-      <div class="my-2">
+      <div>
         <div class="info" v-if="page === 'info'">
           <div class="mb-2">
             <strong>Thể loại</strong>: {{ test.category_code }}
@@ -47,21 +47,56 @@
           </v-btn>
         </div>
         <div class="answer" v-else>
-          <div v-for="part in parts" :key="part.id">
-            <strong>{{ part.name }}</strong>
+          <div v-for="part in parts" :key="part.id" class="mb-5 mt-2">
+            <strong style="text-transform: uppercase">{{ part.name }}</strong>
             <div
-              class="question"
-              v-for="question in part.questions"
+              class="question mb-3"
+              v-for="(question, index) in part.questions"
               :key="question.id"
             >
-              <div>{{ question.name }}</div>
-              <div>{{ question.question }}</div>
-              <div>{{ question.answers }}</div>
+              <div>
+                <strong>{{ question.name }}</strong
+                >. {{ question.question }}
+              </div>
+              <!-- <div
+                class="ml-6"
+                :class="{
+                  'wrong-answer': !history.answers[index],
+                }"
+              >
+                {{ history.answers[index] ? "" : "Chưa trả lời" }}
+              </div> -->
+              <span class="ml-6">Đáp án: &nbsp;</span>
+              <span
+                v-for="(ans, idx) in question.answers"
+                :class="{
+                  // 'wrong-answer': idx + 1 == history.answers[index],
+                  'true-answer': idx + 1 == question.true_answer,
+                }"
+                >{{ ans }} &emsp;
+              </span>
+              <br />
+              <span
+                class="watch-detail"
+                @click="
+                  (openDialog = true),
+                    (questionDetail = Object.assign({}, question))
+                "
+              >
+                [Chi tiết]
+              </span>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <v-dialog v-model="openDialog" persistent>
+      <QuestionDetail
+        class="form"
+        :question-detail="questionDetail"
+        @watchDetail="(res) => (openDialog = res)"
+      />
+    </v-dialog>
   </v-layout>
 </template>
 
@@ -69,23 +104,24 @@
 import api from "@/plugins/url";
 import { ref, onMounted } from "vue";
 import AppBar from "@/components/common/AppBar";
+// import { useStore } from "@/components/store/store";
+import QuestionDetail from "@/components/user/QuestionDetail";
 
 const props = defineProps({
   id: String,
 });
 
+// const store = useStore();
+// const { user, getUser } = store;
 const logined = ref(localStorage.length);
 const parts = ref([]);
 const test = ref({});
-const tests = ref([
-  { id: 1, name: "mot" },
-  { id: 2, name: "hai" },
-  { id: 3, name: "ba" },
-]);
 const page = ref("info");
 const questions = ref([]);
-// console.log(props.id);
-// const defaultFilteredCategory = ref("all");
+const history = ref({});
+const openDialog = ref(false);
+const questionDetail = ref({});
+
 const checkLogin = (param) => {
   if (param > 0) return;
   else {
@@ -99,7 +135,6 @@ const warning = ref("");
 
 onMounted(() => {
   api.get(`/api/tests/${props.id}`).then((res) => {
-    // console.log(res.data);
     test.value = res.data;
   });
   api.get(`/api/tests/${props.id}/parts`).then((res) => {
@@ -111,14 +146,11 @@ onMounted(() => {
     }
     parts.value = res.data;
   });
+  // api.get(`/api/${localStorage.id}/histories/${props.id}`).then((res) => {
+  //   console.log(res.data);
+  //   history.value = res.data;
+  // });
 });
-
-// const loaded = ref(false);
-// const loading = ref(false);
-
-// const onClick = () => {
-//   loading = true;
-// };
 
 const items = ref(["Luyện tập", "Làm full test", "Bình luận"]);
 </script>
@@ -149,8 +181,21 @@ const items = ref(["Luyện tập", "Làm full test", "Bình luận"]);
   display: flex;
   margin-top: 40px;
 }
-/* .v-card {
-  width: 24%;
-  margin-right: 12px;
-} */
+.wrong-answer {
+  color: red;
+  font-weight: 600;
+}
+.true-answer {
+  color: green;
+  font-weight: 600;
+}
+.not-answer {
+  color: rgb(107, 107, 107);
+  font-weight: 600;
+}
+.watch-detail {
+  margin-left: 24px;
+  cursor: pointer;
+  color: #0d47a1;
+}
 </style>
