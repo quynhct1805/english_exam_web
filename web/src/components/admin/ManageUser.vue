@@ -122,7 +122,7 @@ const onClick = () => {
   background-color: #e8ebf3;
 }
 .main .search-input {
-  width: 50%;
+  width: 40%;
 }
 .main .select-input {
   width: 20%;

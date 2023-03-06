@@ -1,6 +1,6 @@
 <template>
   <div class="test-info">
-    <v-card v-for="test in tests">
+    <v-card v-for="test in !!items ? items : tests">
       <v-card-title style="text-transform: uppercase">{{
         test.name
       }}</v-card-title>
@@ -30,6 +30,10 @@
 import api from "@/plugins/url";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
+
+const props = defineProps({
+  items: { type: Object, required: false },
+});
 
 const categories = ref([]);
 const tests = ref([]);

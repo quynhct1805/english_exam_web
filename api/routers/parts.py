@@ -44,12 +44,8 @@ class PartPatchRequest(BaseModel):
     name: str
     total_ques: int
     description: Optional[str]
-    # time: int
-
-
-# class QuesOfPart(BaseModel):
-#     id: int
-#     name: str
+    audio: Optional[str]
+    paragraph: Optional[str]
 
 
 @router.get("/api/parts", tags=["Parts"], response_model=List[Part])

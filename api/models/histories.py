@@ -1,6 +1,6 @@
 from . import Base
 import peewee as p
-from playhouse.postgres_ext import DateTimeField
+from playhouse.postgres_ext import DateTimeField, ArrayField
 
 
 class Histories(Base):
@@ -9,6 +9,7 @@ class Histories(Base):
     test_id = p.IntegerField()
     grade = p.IntegerField()
     time = p.IntegerField()
+    answers = ArrayField(field_class=p.TextField)
     created_at = DateTimeField(default=p.SQL("NOW()"))
 
     # class Meta:

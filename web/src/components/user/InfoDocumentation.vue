@@ -31,11 +31,7 @@ import AppBar from "@/components/common/AppBar";
 // });
 // const parts = ref([]);
 // const test = ref({});
-// const tests = ref([
-//   { id: 1, name: "mot" },
-//   { id: 2, name: "hai" },
-//   { id: 3, name: "ba" },
-// ]);
+
 // const page = ref("info");
 // const questions = ref([]);
 // // console.log(props.id);
@@ -71,34 +67,4 @@ const items = ref(["Luyện tập", "Làm full test", "Bình luận"]);
 .audio .audio__player-play-and-title {
   display: none;
 }
-
-/* .main {
-  width: 60%;
-  margin: 0px auto;
-  padding: 20px 12px;
-}
-.main .v-chip {
-  color: #1f3759;
-}
-.main .title {
-  color: #1f3759;
-  font-size: 2rem;
-  text-transform: uppercase;
-  font-weight: 500;
-}
-.main .search-input {
-  width: 50%;
-}
-.main .select-input {
-  width: 20%;
-}
-
-.test-info {
-  display: flex;
-  margin-top: 40px;
-} */
-/* .v-card {
-    width: 24%;
-    margin-right: 12px;
-  } */
 </style>

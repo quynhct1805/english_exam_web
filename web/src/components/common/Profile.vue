@@ -30,7 +30,7 @@
           <v-row class="title">
             <v-col class="text-center">Đề</v-col>
             <v-col class="text-center" cols="2">Kết quả</v-col>
-            <v-col class="text-center" cols="2">Thời gian làm</v-col>
+            <v-col class="text-center" cols="3">Thời gian làm (s)</v-col>
             <v-col class="text-center" cols="2">Ngày làm</v-col>
           </v-row>
           <v-divider></v-divider>
@@ -40,14 +40,16 @@
             v-for="(history, index) in user.histories"
             :key="index"
           >
-            <!-- <router-link
-              :to="{ name: 'ManageDetailTest', params: { testId: test.id } }"
-            > -->
-            <v-col class="text-center">{{ history.test }}</v-col>
-            <v-col class="text-center" cols="2">{{ history.grade }}</v-col>
-            <v-col class="text-center" cols="2">{{ history.time }}</v-col>
-            <v-col class="text-center" cols="2">{{ history.created_at }}</v-col>
-            <!-- </router-link> -->
+            <router-link
+              :to="{ name: 'HistoryDetail', params: { historyId: history.id } }"
+            >
+              <v-col class="text-center">{{ history.test }}</v-col>
+              <v-col class="text-center" cols="2">{{ history.grade }}</v-col>
+              <v-col class="text-center" cols="3">{{ history.time }}</v-col>
+              <v-col class="text-center" cols="2">
+                {{ history.created_at }}
+              </v-col>
+            </router-link>
           </v-row>
         </v-table>
       </div>
@@ -75,14 +77,10 @@ const props = defineProps({
 
 const store = useStore();
 const { user, getUser } = store;
-console.log(props.id);
+// console.log(props.id);
 
 const openDialog = ref(false);
 const profileInfo = ref({});
-
-// const deleteTest = (testId) => {
-//   api.delete(`/api/tests/${testId}`).then((res) => console.log(res));
-// };
 
 onMounted(() => {
   getUser(props.id);
@@ -100,10 +98,6 @@ onMounted(() => {
   padding: 20px 0;
 }
 
-.test-info {
-  display: flex;
-  margin-top: 40px;
-}
 .v-btn--icon {
   height: 36px;
   width: 36px;
@@ -141,5 +135,9 @@ onMounted(() => {
 .v-divider {
   margin-top: 8px;
   margin-bottom: 8px;
+}
+.v-row a {
+  display: contents;
+  color: black;
 }
 </style>

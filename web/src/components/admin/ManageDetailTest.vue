@@ -17,17 +17,12 @@
         <div>Thời gian: {{ test.time }}</div>
         <div>Số bài: {{ test.total_part }}</div>
         <div>Mô tả: {{ test.description }}</div>
-
-        <!-- <v-btn color="success" text @click="handledClickSave"> Lưu </v-btn> -->
-
-        {{ addQues }}
         <v-expansion-panels variant="popout" class="panel-part my-4">
           <v-expansion-panel
             v-for="part in parts"
             :key="part.id"
             :title="part.name"
             class="question-info"
-            @click="change(part.id)"
           >
             <v-expansion-panel-text>
               <div class="question pb-2" v-for="ques in part.questions">
@@ -50,13 +45,21 @@
                 </v-card-content>
               </div>
               <v-btn
-                class="add-btn"
+                class="add-btn included"
                 variant="text"
                 color="#10294d"
                 icon="mdi-plus-circle-outline"
                 @click="(addQues = true), (newQues.part_id = part.id)"
               ></v-btn>
-              <div class="add-question" v-if="addQues">
+              <v-form
+                class="add-question"
+                v-if="addQues"
+                v-click-outside="{
+                  handler: onClickOutside,
+                  include,
+                }"
+                @submit.prevent
+              >
                 <v-card-title>Thêm câu hỏi</v-card-title>
                 <v-row no-gutters>
                   <v-col cols="2">
@@ -65,6 +68,7 @@
                       variant="outlined"
                       label="Tên"
                       density="compact"
+                      :rules="textRules"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12">
@@ -106,28 +110,49 @@
                   Hủy
                 </v-btn>
 
-                <v-btn color="success" text @click="saveNewQues"> Lưu </v-btn>
-              </div>
+                <v-btn color="success" text @click="saveNewQues" type="submit">
+                  Lưu
+                </v-btn>
+              </v-form>
             </v-expansion-panel-text>
           </v-expansion-panel>
         </v-expansion-panels>
         <v-btn
-          class="add-btn"
+          class="add-btn included"
           variant="text"
           color="#10294d"
           prepend-icon="mdi-plus"
           @click="addPart = true"
           >Thêm bài
         </v-btn>
-        <div class="add-part" v-if="addPart">
+        <v-form
+          class="add-part"
+          v-if="addPart"
+          v-click-outside="{
+            handler: onClickOutside,
+            include,
+          }"
+          @submit.prevent
+        >
           <v-card-title>Thêm bài</v-card-title>
           <v-row no-gutters>
             <v-col cols="2" class="mr-4">
               <v-text-field
                 v-model="newPart.name"
                 variant="outlined"
-                label="Tên"
+                label="Tên *"
                 density="compact"
+                :rules="textRules"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="2" class="mr-4">
+              <v-text-field
+                type="number"
+                v-model="newPart.total_ques"
+                variant="outlined"
+                label="Tổng số câu hỏi"
+                density="compact"
+                :rules="numberRules"
               ></v-text-field>
             </v-col>
             <v-col cols="3" class="mr-4">
@@ -138,7 +163,7 @@
                 density="compact"
               ></v-text-field>
             </v-col>
-            <v-col cols="12">
+            <v-col cols="12" class="mt-3">
               <v-textarea
                 v-model="newPart.paragraph"
                 variant="outlined"
@@ -148,11 +173,11 @@
                 messages="** Thêm tên file nghe, đoạn văn nếu có"
               ></v-textarea>
             </v-col>
-            <v-col cols="12">
+            <v-col cols="12" class="mt-3">
               <v-textarea
                 v-model="newPart.description"
                 variant="outlined"
-                label="Giải thích"
+                label="Mô tả"
                 density="compact"
                 rows="2"
               ></v-textarea>
@@ -162,8 +187,13 @@
             Hủy
           </v-btn>
 
-          <v-btn color="success" text @click="handledClickSave"> Lưu </v-btn>
-        </div>
+          <v-btn color="success" text type="submit" @click="saveNewPart">
+            Lưu
+          </v-btn>
+        </v-form>
+        <v-alert class="alert" v-if="showAlert" type="error">
+          {{ error }}
+        </v-alert>
       </div>
     </div>
   </v-layout>
@@ -172,21 +202,23 @@
 <script setup>
 import api from "@/plugins/url";
 import { ref, onMounted, computed, reactive } from "vue";
-// import { useStore } from "@/components/store/users";
+import { useRules } from "@/components/store/rules";
 import AppBar from "@/components/admin/AppBar";
 
 const props = defineProps({
   id: String,
 });
 
-// const store = useStore();
-// const { user, getUser, userId } = store;
+const rules = useRules();
+const { numberRules, textRules } = rules;
 
 const test = ref({});
 const parts = ref([]);
 const questions = ref([]);
 const userAnswers = ref([]);
 const result = ref({});
+const showAlert = ref(false);
+const error = ref("");
 
 const addQues = ref(false);
 const newQues = ref({
@@ -199,7 +231,13 @@ const newQues = ref({
 });
 const saveNewQues = () => {
   console.log("save");
-  console.log(newQues.value);
+  const ans = newQues.value.answers.split(",");
+  newQues.value.answers = ans;
+  console.log(newQues);
+  api.post(`/api/questions`, newQues.value).then((res) => {
+    console.log(res.data);
+  });
+  addQues.value = false;
 };
 
 const addPart = ref(false);
@@ -211,10 +249,16 @@ const newPart = ref({
   audio: "",
   paragraph: "",
 });
-
-const change = (id) => {
-  console.log("change", id);
-  if (addQues.value === true) console.log(addQues.value);
+const saveNewPart = () => {
+  if (newPart.value.name === "" || [0, ""].includes(newPart.value.total_ques)) {
+    showAlert.value = true;
+    error.value = "Vui lòng nhập thông tin!";
+    return;
+  }
+  api.post(`/api/parts`, newPart.value).then((res) => {
+    console.log(res.data);
+  });
+  addPart.value = false;
 };
 
 const add = (id) => {
@@ -235,6 +279,15 @@ const submitBtn = () => {
   if (respone) {
     history.back();
   }
+};
+
+const onClickOutside = () => {
+  addQues.value = false;
+  addPart.value = false;
+};
+
+const include = () => {
+  return [document.querySelector(".included")];
 };
 
 onMounted(() => {
