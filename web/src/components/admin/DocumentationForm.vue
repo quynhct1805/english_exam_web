@@ -19,7 +19,7 @@
               :rules="textRules"
             ></v-text-field>
           </v-col>
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="4">
             <v-autocomplete
               v-model="documentation.category_id"
               label="Thể loại *"
@@ -30,7 +30,7 @@
               :rules="textRules"
             ></v-autocomplete>
           </v-col>
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="4">
             <v-select
               v-model="documentation.skill"
               :items="skill"
@@ -41,19 +41,16 @@
               :rules="textRules"
             ></v-select>
           </v-col>
-          <v-col cols="12">
-            <v-file-input
-              v-model="files"
-              density="comfortable"
-              accept=".pdf"
-              multiple
-              chips
-              label="Tài liệu *"
+          <v-col cols="12" md="4">
+            <v-select
+              v-model="documentation.type"
+              :items="typeDoc"
+              item-title="name"
+              item-value="id"
+              label="Dạng tài liệu *"
               variant="underlined"
-              messages="** Định dạng file cho phép *.pdf, *.txt"
-              :rules="fileRules"
-              @change="checkFile"
-            ></v-file-input>
+              :rules="textRules"
+            ></v-select>
           </v-col>
           <v-col cols="12">
             <v-textarea
@@ -63,6 +60,14 @@
               variant="underlined"
               rows="2"
               no-resize
+            ></v-textarea>
+          </v-col>
+          <v-col cols="12">
+            <v-textarea
+              v-model="documentation.doc"
+              label="Tài liệu *"
+              persistent-hint
+              variant="underlined"
             ></v-textarea>
           </v-col>
         </v-row>
@@ -82,7 +87,7 @@
       >
         Hủy
       </v-btn>
-      <v-btn color="#62311a" text @click="handledClickSave"> Lưu </v-btn>
+      <v-btn color="#62311a" text @click="handledClickSave()"> Lưu </v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -105,7 +110,7 @@ const documentation = ref(
   _.cloneDeep(JSON.parse(JSON.stringify(props.documentationInfo)))
 );
 
-const emit = defineEmits(["changeDocumentation"]);
+const emit = defineEmits(["changeDocumentation", "infoNewDoc"]);
 const categories = ref([]);
 const store = useStore();
 const skill = store.skill;
@@ -115,35 +120,28 @@ const { textRules, fileRules } = rules;
 const showAlert = ref(false);
 const error = ref("");
 
-// console.log(documentation.files);
-
 const checkFile = () => {
-  console.log("files", files.value[0]);
   const file = files.value[0];
-  console.log("file", file.name);
   const generatedFile = new File(["Rough Draft ...."], file.name, {
     type: file.type,
     lastModified: file.lastModified,
   });
-  console.log(generatedFile);
 };
 
 const files = ref([]);
 
+const typeDoc = ref(["Từ vựng", "Mẫu câu hỏi"]);
+
 // const time = ref(new Date().getTime());
-// console.log(time.value);
 // const date = ref(new Date());
-// console.log(date.value.toTimeString());
 
 // const addFiles = () => {
-//   console.log("files", files);
 //   // this.files.forEach((file, f) => {
 //   //   this.readers[f] = new FileReader();
 //   //   this.readers[f].onloadend = (e) => {
 //   //     let fileData = this.readers[f].result;
 //   //     let imgRef = this.$refs.file[f];
 //   //     imgRef.src = fileData;
-//   //     console.log(fileData);
 //   //     // send to server here...
 //   //   };
 
@@ -157,42 +155,37 @@ onMounted(() => {
 });
 
 const createDocumentation = (param) => {
-  console.log(param);
   api.post("/api/documentations", param).then((res) => {
-    console.log(res.data);
-    // tests.value = res.data;
+    Object.assign(param, res.data);
+    const category_code = JSON.parse(JSON.stringify(categories.value)).filter(
+      (category) => category.id === param.category_id
+    );
+    Object.assign(param, { category_code: category_code[0].code });
+    emit("infoNewDoc", param);
   });
 };
 
 const updateDocumentation = (param) => {
-  console.log(param);
   api
     .patch(`/api/documentations/${documentation.value.id}`, param)
     .then((res) => {
-      console.log(res.data);
-      // tests.value = res.data;
+      Object.assign(param, res.data);
+      emit("infoNewDoc", param);
     });
 };
 
 function handledClickSave() {
   const param = JSON.parse(JSON.stringify(documentation.value));
-  console.log(files.value);
-  console.log(documentation.value);
-  console.log(param);
+
   for (const file of files.value) {
     param.files.push(file);
   }
   // param.files.push(files.value);
-  console.log(param);
   if (_.isEmpty(param) || !param.name || !param.category_id || !param.skill) {
     showAlert.value = true;
     error.value = "Vui lòng nhập thông tin bắt buộc!";
     return;
   } else {
-    console.log(param);
-
-    delete param.category_code;
-    delete param.id;
     if (props.action === "add") createDocumentation(param);
     else updateDocumentation(param);
 

@@ -22,7 +22,6 @@ import AppBar from "@/components/common/AppBar";
 // const store = useStore(1);
 const logined = ref(localStorage.length);
 const role = ref(localStorage.role);
-// console.log(role.value);
 const managementPages = ref([
   {
     page: "ManageUser",

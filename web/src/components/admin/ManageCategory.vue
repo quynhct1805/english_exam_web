@@ -19,47 +19,51 @@
         </v-container>
       </div>
 
-      <v-table class="manage-category" :key="categories.length">
-        <v-row class="title">
-          <v-col class="text-center" cols="1">STT</v-col>
-          <v-col class="text-center" cols="1">Mã thể loại</v-col>
-          <v-col class="text-center" cols="3">Tên thể loại</v-col>
-          <v-col class="text-center">Mô tả</v-col>
-          <v-col class="text-center" cols="1"></v-col>
-        </v-row>
-        <v-divider></v-divider>
+      <v-card>
+        <v-table class="manage-category" :key="categories.length">
+          <v-row class="title">
+            <v-col class="text-center" cols="1">STT</v-col>
+            <v-col class="text-center" cols="2">Mã thể loại</v-col>
+            <v-col class="text-center" cols="3">Tên thể loại</v-col>
+            <v-col class="text-center">Mô tả</v-col>
+            <v-col class="text-center" cols="1"></v-col>
+          </v-row>
+          <v-divider></v-divider>
 
-        <v-row
-          class="content"
-          v-for="(category, index) in categories"
-          :key="category.id"
-        >
-          <v-col class="text-center" cols="1">{{ index + 1 }}</v-col>
-          <v-col class="text-center" cols="1">{{ category.code }}</v-col>
-          <v-col class="text-center" cols="3">{{ category.name }}</v-col>
-          <v-col class="text-center">{{ category.description }}</v-col>
-          <v-col class="text-center" cols="1">
-            <v-btn
-              color="warning"
-              @click="
-                (openDialog = true),
-                  (action = 'edit'),
-                  (categoryInfo = Object.assign({}, category))
-              "
-              icon="mdi-pencil-outline"
-              size="small"
-              variant="text"
-            ></v-btn>
-            <v-btn
-              color="error"
-              icon="mdi-delete"
-              size="small"
-              variant="text"
-              @click="deleteCategory(category.id)"
-            ></v-btn>
-          </v-col>
-        </v-row>
-      </v-table>
+          <v-row
+            class="content"
+            v-for="(category, index) in categories"
+            :key="category.id"
+            :class="{ background: index % 2 == 0 }"
+          >
+            <v-col class="text-center" cols="1">{{ index + 1 }}</v-col>
+            <v-col class="text-center" cols="2">{{ category.code }}</v-col>
+            <v-col class="text-center" cols="3">{{ category.name }}</v-col>
+            <v-col class="text-center">{{ category.description }}</v-col>
+            <v-col class="text-center" cols="1">
+              <v-btn
+                color="warning"
+                @click="
+                  (openDialog = true),
+                    (action = 'edit'),
+                    (categoryInfo = Object.assign({}, category))
+                "
+                icon="mdi-pencil-outline"
+                size="small"
+                variant="text"
+              ></v-btn>
+              <v-btn
+                color="error"
+                icon="mdi-delete"
+                size="small"
+                variant="text"
+                @click="deleteCategory(category.id)"
+              ></v-btn>
+            </v-col>
+            <v-divider></v-divider>
+          </v-row>
+        </v-table>
+      </v-card>
     </div>
     <v-dialog v-model="openDialog" persistent>
       <CategoryForm
@@ -89,7 +93,6 @@ const action = ref("");
 const categoryInfo = ref({});
 
 const deleteCategory = (categoryId) => {
-  console.log(categoryId);
   api.delete(`/api/categories/${categoryId}`).then((res) => console.log(res));
 };
 
@@ -132,17 +135,20 @@ onMounted(() => {
 .v-table :deep(.v-table__wrapper) {
   overflow: hidden;
 }
+.v-row.title {
+  font-weight: 500;
+}
 .v-row.title,
 .content {
   width: 100%;
-  margin-top: 2px;
+  margin: 0px;
 }
 .v-btn--icon {
   height: 24px;
   width: 24px;
   margin-right: 4px;
 }
-.v-divider {
-  margin-top: 8px;
+.background {
+  background-color: #dfdede69;
 }
 </style>

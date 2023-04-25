@@ -31,6 +31,8 @@ class Documentation(BaseModel):
     skill: SkillTypeEnum
     category_id: int
     category_code: str
+    doc: str = None
+    type: str
 
 
 class DocumentationPostRequest(BaseModel):
@@ -39,6 +41,8 @@ class DocumentationPostRequest(BaseModel):
     skill: SkillEnum
     files: Optional[List[dict]]
     description: Optional[str]
+    doc: Optional[str]
+    type: str
 
 
 class DocumentationPostResponse(BaseModel):
@@ -51,6 +55,7 @@ class DocumentationPatchRequest(BaseModel):
     skill: SkillEnum
     files: Optional[List[dict]]
     description: Optional[str]
+    doc: Optional[str]
 
 
 @router.get(

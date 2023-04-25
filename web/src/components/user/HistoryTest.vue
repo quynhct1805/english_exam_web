@@ -6,15 +6,15 @@
         variant="text"
         color="#10294d"
         icon="mdi-arrow-left-thick"
-        @click="$router.back()"
+        @click="$router.replace(`/profile/${userId}`)"
       ></v-btn>
       <div class="title my-3 mx-2">Lịch sử kiểm tra</div>
       <div class="info" style="font-size: 1.2rem">
         <div>
           Đề: <strong>{{ history.test }}</strong>
         </div>
-        <div>Điểm: {{ history.grade }}</div>
-        <div>Tổng thời gian làm bài: {{ history.time }}</div>
+        <div>Kết quả (số câu đúng): {{ history.grade }}</div>
+        <div>Tổng thời gian làm bài: {{ history.time }} giây</div>
         <div>Ngày làm bài: {{ history.created_at }}</div>
       </div>
       <v-btn class="my-3" variant="text" @click="watchDetail = !watchDetail">
@@ -97,6 +97,7 @@ const history = ref({});
 const watchDetail = ref(false);
 const openDialog = ref(false);
 const questionDetail = ref({});
+const userId = ref(localStorage.id);
 
 onMounted(() => {
   api.get(`/api/histories/${props.id}`).then((res) => {

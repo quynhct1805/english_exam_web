@@ -2,14 +2,19 @@
   <AppBar />
   <v-layout>
     <div class="main">
-      <!-- <div class="welcome text-h5">Xin chào, {{ userName }}!</div> -->
       <slot name="welcome"></slot>
       <div class="list-test">
-        <div class="title text-h5 my-8">Đề thi mới nhất</div>
+        <div class="title text-h5 my-8" v-if="role === 'member'">
+          Đề thi mới nhất
+        </div>
+        <div class="title text-h5 my-8" v-else>Đề thi</div>
         <ListTest />
       </div>
       <div class="list-documentation">
-        <div class="title text-h5 my-8">Tài liệu mới nhất</div>
+        <div class="title text-h5 my-8" v-if="role === 'member'">
+          Tài liệu mới nhất
+        </div>
+        <div class="title text-h5 my-8" v-else>Tài liệu</div>
         <Documentation />
       </div>
     </div>
@@ -44,6 +49,7 @@ const icons = ref([
   "mdi-linkedin",
   "mdi-instagram",
 ]);
+const role = ref(localStorage.role);
 
 onMounted(() => {
   getTests();
@@ -72,6 +78,7 @@ onMounted(() => {
   font-weight: 500;
 }
 .v-footer {
-  background-color: #e7f0f6;
+  background-color: #185179;
+  color: white;
 }
 </style>

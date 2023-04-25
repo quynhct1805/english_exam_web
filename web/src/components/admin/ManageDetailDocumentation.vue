@@ -1,57 +1,49 @@
 <template>
   <AppBar />
   <v-layout>
-    <v-btn variant="outlined" color="#964a27" @click="$router.back()">
-      <v-icon icon="mdi-arrow-left-thick"></v-icon>
-    </v-btn>
-    <v-container>
-      <div class="title">
+    <div class="main">
+      <v-btn
+        variant="text"
+        color="#10294d"
+        icon="mdi-arrow-left-thick"
+        @click="$router.back()"
+      ></v-btn>
+      <div class="title mb-3">
         <h1 class="documentation-name">
           [{{ documentation.category_code }}] {{ documentation.name }}
         </h1>
       </div>
-      <span>{{ documentation }}</span>
+      <div class="content">
+        <v-expansion-panels v-model="panel" class="mb-4">
+          <v-expansion-panel>
+            <v-expansion-panel-title>
+              <strong>Thông tin</strong>
+            </v-expansion-panel-title>
+            <v-expansion-panel-text>
+              <div class="mb-1">
+                <strong>Kỹ năng:</strong> {{ documentation.skill }}
+              </div>
+              <div class="mb-1">
+                <strong>Mô tả:</strong> {{ documentation.description }}
+              </div>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </v-expansion-panels>
+        <div>{{ documentation.type }}</div>
+        <v-expansion-panels>
+          <v-expansion-panel>
+            <v-expansion-panel-title>
+              <strong>Tài liệu</strong>
+            </v-expansion-panel-title>
+            <v-expansion-panel-text>
+              <div v-for="doc in docs">{{ doc }}</div>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </v-expansion-panels>
 
-      <div class="main">
-        <div class="content">
-          <div>Kỹ năng: {{ documentation.skill }}</div>
-          <div>Mô tả: {{ documentation.description }}</div>
-          <div>Tài liệu: {{ documentation.files }}</div>
-          <!-- <v-card class="question" v-for="ques in questions">
-            <v-card-title class="question-number">{{ ques.id }}</v-card-title>
-            <v-card-content class="question-content">
-              <span>{{ ques.question }}</span>
-              <v-radio-group hide-details v-model="userAnswers[ques.id]">
-                <v-radio
-                  v-for="(ans, idx) in ques.answers"
-                  :label="ans"
-                  :value="idx + 1"
-                ></v-radio>
-              </v-radio-group>
-            </v-card-content>
-          </v-card> -->
-        </div>
-        <!-- <v-card class="navigation">
-          <div>
-            Thời gian làm bài: <span id="m">Phút</span> :
-            <span id="s">Giây</span>
-          </div>
-          <v-btn class="submit-btn" variant="outlined" @click="submitBtn">
-            Nop bai
-          </v-btn>
-          <v-list class="question-list">
-            <v-list-item
-              class="question-list-item"
-              v-for="i in questions.length"
-              variant="outlined"
-              :value="i"
-            >
-              {{ i }}
-            </v-list-item>
-          </v-list>
-        </v-card> -->
+        <!-- <div>Tài liệu: {{ documentation.files }}</div> -->
       </div>
-    </v-container>
+    </div>
   </v-layout>
 </template>
 
@@ -85,16 +77,26 @@ const submitBtn = () => {
     history.back();
   }
 };
+const panel = ref([0]);
 
 const userAnswers = ref([]);
 
 const result = ref({});
 
+const docs = ref([]);
+
 onMounted(() => {
   api.get(`/api/documentations/${props.id}`).then((res) => {
     documentation.value = res.data;
+    docs.value = res.data.doc.split(";");
   });
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.main {
+  width: 60%;
+  margin: 0px auto;
+  padding: 20px 12px;
+}
+</style>

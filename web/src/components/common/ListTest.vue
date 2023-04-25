@@ -1,5 +1,5 @@
 <template>
-  <div class="test-info">
+  <div class="test-info" :class="{ 'test-info-admin': role == 'admin' }">
     <v-card v-for="test in !!items ? items : tests">
       <v-card-title style="text-transform: uppercase">{{
         test.name
@@ -39,10 +39,16 @@ const categories = ref([]);
 const tests = ref([]);
 
 const router = useRouter();
+const role = ref(localStorage.role);
 
 onMounted(() => {
   api.get("/api/tests").then((res) => {
-    if (["Home", "FirstPage"].includes(router.currentRoute.value.name)) {
+    console.log(role.value);
+    if (
+      (["Home", "FirstPage"].includes(router.currentRoute.value.name) &&
+        role.value === "member") ||
+      !role.value
+    ) {
       res.data = res.data.slice(-3);
     }
     tests.value = res.data;
@@ -71,5 +77,9 @@ onMounted(() => {
 }
 .v-card-actions {
   color: #21385a;
+}
+
+.test-info-admin {
+  justify-content: start !important;
 }
 </style>

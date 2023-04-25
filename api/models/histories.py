@@ -7,7 +7,7 @@ class Histories(Base):
     id = p.PrimaryKeyField()
     user_id = p.IntegerField()
     test_id = p.IntegerField()
-    grade = p.IntegerField()
+    grade = p.TextField()
     time = p.IntegerField()
     answers = ArrayField(field_class=p.TextField)
     created_at = DateTimeField(default=p.SQL("NOW()"))

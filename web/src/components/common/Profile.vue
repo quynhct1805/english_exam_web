@@ -26,31 +26,41 @@
       <div class="user-name text-h4">{{ user.name }}</div>
       <div class="histories">
         <div class="text-h6">Kết quả luyện thi</div>
-        <v-table class="mt-3">
+        <v-table class="histories mt-3">
           <v-row class="title">
             <v-col class="text-center">Đề</v-col>
-            <v-col class="text-center" cols="2">Kết quả</v-col>
+            <v-col class="text-center" cols="2">
+              Kết quả<br />
+              (số câu đúng)
+            </v-col>
             <v-col class="text-center" cols="3">Thời gian làm (s)</v-col>
             <v-col class="text-center" cols="2">Ngày làm</v-col>
           </v-row>
           <v-divider></v-divider>
 
-          <v-row
-            class="content"
-            v-for="(history, index) in user.histories"
-            :key="index"
-          >
-            <router-link
-              :to="{ name: 'HistoryDetail', params: { historyId: history.id } }"
+          <v-card>
+            <v-row
+              class="content"
+              v-for="(history, index) in user.histories"
+              :key="index"
+              :class="{ background: index % 2 == 0 }"
             >
-              <v-col class="text-center">{{ history.test }}</v-col>
-              <v-col class="text-center" cols="2">{{ history.grade }}</v-col>
-              <v-col class="text-center" cols="3">{{ history.time }}</v-col>
-              <v-col class="text-center" cols="2">
-                {{ history.created_at }}
-              </v-col>
-            </router-link>
-          </v-row>
+              <router-link
+                :to="{
+                  name: 'HistoryDetail',
+                  params: { historyId: history.id },
+                }"
+              >
+                <v-col class="text-center">{{ history.test }}</v-col>
+                <v-col class="text-center" cols="2">{{ history.grade }}</v-col>
+                <v-col class="text-center" cols="3">{{ history.time }}</v-col>
+                <v-col class="text-center" cols="2">
+                  {{ history.created_at }}
+                </v-col>
+              </router-link>
+              <v-divider></v-divider>
+            </v-row>
+          </v-card>
         </v-table>
       </div>
     </div>
@@ -132,12 +142,19 @@ onMounted(() => {
 .v-row.title {
   font-weight: bold;
 }
-.v-divider {
+/* .v-divider {
   margin-top: 8px;
   margin-bottom: 8px;
-}
+} */
 .v-row a {
   display: contents;
   color: black;
+}
+.v-row.title,
+.content {
+  margin: 0px;
+}
+.background {
+  background-color: #dfdede69;
 }
 </style>

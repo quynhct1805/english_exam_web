@@ -5,10 +5,6 @@
     <div class="main manage-test">
       <div class="content-header">
         <v-chip-group>
-          <router-link :to="{ name: 'ManageTest' }">
-            <v-chip variant="outlined" value="all"> Tất cả </v-chip>
-          </router-link>
-
           <router-link
             v-for="category in categories"
             :key="category.id"
@@ -70,51 +66,61 @@
         </v-container>
       </div>
 
-      <v-table class="manage-test" :key="items.length">
-        <v-row class="title">
-          <v-col class="text-center" cols="1">STT</v-col>
-          <v-col class="text-center" cols="2">Thể loại</v-col>
-          <v-col class="text-center">Đề</v-col>
-          <v-col class="text-center" cols="2">Kỹ năng</v-col>
-          <v-col class="text-center" cols="1">Tổng số bài</v-col>
-          <v-col class="text-center" cols="2">Tổng thời gian</v-col>
-          <v-col class="text-center" cols="1"></v-col>
-        </v-row>
-        <v-divider></v-divider>
+      <v-card>
+        <v-table class="manage-test" :key="items.length">
+          <v-row class="title">
+            <v-col class="text-center" cols="1">STT</v-col>
+            <v-col class="text-center" cols="2">Thể loại</v-col>
+            <v-col class="text-center">Đề</v-col>
+            <v-col class="text-center" cols="2">Kỹ năng</v-col>
+            <v-col class="text-center" cols="2">Tổng số bài</v-col>
+            <v-col class="text-center" cols="2">Tổng thời gian (s)</v-col>
+            <v-col class="text-center" cols="1"></v-col>
+          </v-row>
+          <v-divider></v-divider>
 
-        <v-row class="content" v-for="(test, index) in items" :key="test.id">
-          <router-link
-            :to="{ name: 'ManageDetailTest', params: { testId: test.id } }"
+          <v-row
+            class="content"
+            v-for="(test, index) in items"
+            :key="test.id"
+            :class="{ background: index % 2 == 0 }"
           >
-            <v-col class="text-center" cols="1">{{ index + 1 }}</v-col>
-            <v-col class="text-center" cols="2">{{ test.category_code }}</v-col>
-            <v-col class="text-center">{{ test.name }}</v-col>
-            <v-col class="text-center" cols="2">{{ test.skill }}</v-col>
-            <v-col class="text-center" cols="1">{{ test.total_part }}</v-col>
-            <v-col class="text-center" cols="2">{{ test.time }}</v-col>
-          </router-link>
-          <v-col class="text-center" cols="1">
-            <v-btn
-              color="warning"
-              @click="
-                (openDialog = true),
-                  (action = 'edit'),
-                  (testInfo = Object.assign({}, test))
-              "
-              icon="mdi-pencil-outline"
-              size="small"
-              variant="text"
-            ></v-btn>
-            <v-btn
-              color="error"
-              icon="mdi-delete"
-              size="small"
-              variant="text"
-              @click="deleteTest(test.id)"
-            ></v-btn>
-          </v-col>
-        </v-row>
-      </v-table>
+            <router-link
+              :to="{ name: 'ManageDetailTest', params: { testId: test.id } }"
+            >
+              <v-col class="text-center" cols="1">{{ index + 1 }}</v-col>
+              <v-col class="text-center" cols="2">{{
+                test.category_code
+              }}</v-col>
+              <v-col class="text-center">{{ test.name }}</v-col>
+              <v-col class="text-center" cols="2">{{ test.skill }}</v-col>
+              <v-col class="text-center" cols="2">{{ test.total_part }}</v-col>
+              <v-col class="text-center" cols="2">{{ test.time }}</v-col>
+            </router-link>
+            <v-col class="text-center" cols="1">
+              <v-btn
+                color="warning"
+                @click="
+                  (openDialog = true),
+                    (action = 'edit'),
+                    (testInfo = Object.assign({}, test))
+                "
+                icon="mdi-pencil-outline"
+                size="small"
+                variant="text"
+              ></v-btn>
+              <v-btn
+                color="error"
+                icon="mdi-delete"
+                size="small"
+                variant="text"
+                @click="deleteTest(test.id)"
+              ></v-btn>
+            </v-col>
+            <v-divider></v-divider>
+          </v-row>
+        </v-table>
+      </v-card>
     </div>
     <v-dialog v-model="openDialog" persistent>
       <TestForm
@@ -122,8 +128,17 @@
         :action="action"
         :test-info="testInfo"
         @changeTest="(res) => (openDialog = res)"
+        @infoNewTest="(res) => saveChangeTest(res)"
       />
     </v-dialog>
+    <v-snackbar v-model="snackbar" timeout="1500">
+      Xóa đề thi thành công!
+      <template v-slot:actions>
+        <v-btn color="pink" variant="text" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-layout>
 </template>
 
@@ -149,8 +164,25 @@ const loading = ref(false);
 const filterCate = ref(null);
 const filterSkill = ref(null);
 
+const snackbar = ref(false);
 const deleteTest = (testId) => {
-  api.delete(`/api/tests/${testId}`).then((res) => console.log(res));
+  const respone = confirm("Bạn có muốn xóa đề thi?");
+  if (respone) {
+    items.value = items.value.filter((object) => {
+      return object.id !== testId;
+    });
+    api.delete(`/api/tests/${testId}`).then((res) => {
+      snackbar.value = true;
+    });
+  }
+};
+
+const saveChangeTest = (info) => {
+  if (action.value === "add") items.value.push(info);
+  else {
+    const index = items.value.findIndex((el) => el.id === info.id);
+    items.value[index] = info;
+  }
 };
 
 onMounted(() => {
@@ -248,17 +280,26 @@ watch(filterSkill, (newVal) => {
 .v-table :deep(.v-table__wrapper) {
   overflow: hidden;
 }
+.v-row.title {
+  font-weight: 500;
+}
+
 .v-row.title,
 .content {
   width: 100%;
-  margin-top: 2px;
+  margin: 0px;
 }
 .v-btn--icon {
   height: 24px;
   width: 24px;
   margin-right: 4px;
 }
-.v-divider {
-  margin-top: 8px;
+/* .v-divider {
+  margin: 0 16px;
+  color: #3e3d3d;
+} */
+
+.background {
+  background-color: #dfdede69;
 }
 </style>

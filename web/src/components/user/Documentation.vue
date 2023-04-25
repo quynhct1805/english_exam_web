@@ -3,19 +3,14 @@
   <v-layout>
     <div class="main">
       <v-chip-group>
-        <router-link :to="{ name: 'ListTest' }">
-          <v-chip variant="outlined" value="all"> Tất cả </v-chip>
-        </router-link>
-
-        <router-link
+        <v-chip
           v-for="category in categories"
           :key="category.id"
-          :to="{ name: 'ListTest' }"
+          variant="outlined"
+          :value="`${category.id}`"
         >
-          <v-chip variant="outlined" :value="`${category.id}`">
-            {{ category.code }}
-          </v-chip>
-        </router-link>
+          {{ category.code }}
+        </v-chip>
       </v-chip-group>
       <v-container style="display: flex; margin-bottom: 12px">
         <v-text-field
@@ -40,28 +35,6 @@
         ></v-select>
       </v-container>
       <Documentation />
-      <!-- <span>{{ tests }}</span> -->
-      <!-- <div class="documentation-info">
-        <v-card v-for="documentation in documentations">
-          <v-card-title style="text-transform: uppercase">{{
-            documentation.name
-          }}</v-card-title>
-          <v-card-text>{{ documentation.category_code }}</v-card-text>
-          <v-card-text>{{ documentation.skill }}</v-card-text>
-          <v-card-actions>
-            <v-spacer />
-            <v-btn
-              variant="outlined"
-              :to="{
-                name: 'InfoDocumentation',
-                params: { documentationId: documentation.id },
-              }"
-            >
-              Chi tiết
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </div> -->
     </div>
   </v-layout>
 </template>

@@ -12,6 +12,8 @@ class Documentations(Base):
     category_id = p.IntegerField()
     skill = EnumField(choices=SkillTypeEnum)
     created_at = p.TextField()
+    doc = p.TextField()
+    type = p.TextField()
 
     # class Meta:
     #     db_table = "users"

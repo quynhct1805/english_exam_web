@@ -1,70 +1,100 @@
 <template>
   <AppBar />
   <v-layout>
-    <div>
-      <audio controls class="pb-10">
-        <source
-          src="@/assets/audio/CD1/01-AudioTrack 01.mp3"
-          type="audio/mp3"
-        />
-      </audio>
+    <div class="main">
+      <v-btn
+        variant="text"
+        color="#10294d"
+        icon="mdi-arrow-left-thick"
+        @click="$router.back()"
+      ></v-btn>
+      <div class="title mb-3">
+        <h1 class="documentation-name">
+          [{{ documentation.category_code }}] {{ documentation.name }}
+        </h1>
+      </div>
+      <div class="content">
+        <v-expansion-panels v-model="panel" class="mb-4">
+          <v-expansion-panel>
+            <v-expansion-panel-title>
+              <strong>Thông tin</strong>
+            </v-expansion-panel-title>
+            <v-expansion-panel-text>
+              <div class="mb-1">
+                <strong>Kỹ năng:</strong> {{ documentation.skill }}
+              </div>
+              <div class="mb-1">
+                <strong>Mô tả:</strong> {{ documentation.description }}
+              </div>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </v-expansion-panels>
+        <v-expansion-panels>
+          <v-expansion-panel>
+            <v-expansion-panel-title>
+              <strong>Tài liệu</strong>
+            </v-expansion-panel-title>
+            <v-expansion-panel-text>
+              <div v-for="doc in docs">{{ doc }}</div>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </v-expansion-panels>
+        <!-- <div>Tài liệu: {{ documentation.files }}</div> -->
+      </div>
     </div>
-
-    <!-- <AudioPlayer 
-      class="audio" 
-      :option="{
-        :src:"@/assets/audio/01-AudioTrack 01.mp3"
-      }" 
-    /> -->
-    <!-- <div class="main">
-    </div> -->
   </v-layout>
 </template>
 
 <script setup>
 import api from "@/plugins/url";
-import { ref, onMounted } from "vue";
-import AppBar from "@/components/common/AppBar";
+import { ref, onMounted, computed } from "vue";
+// import { useStore } from "@/components/store/users";
+import AppBar from "@/components/admin/AppBar";
 
-// const props = defineProps({
-//   id: String,
-// });
-// const parts = ref([]);
-// const test = ref({});
+const props = defineProps({
+  id: String,
+});
 
-// const page = ref("info");
-// const questions = ref([]);
-// // console.log(props.id);
-// // const defaultFilteredCategory = ref("all");
+// const store = useStore();
+// const { user, getUser, userId } = store;
 
-// onMounted(() => {
-//   api.get(`/api/tests/${props.id}`).then((res) => {
-//     // console.log(res.data);
-//     test.value = res.data;
-//   });
-//   api.get(`/api/tests/${props.id}/parts`).then((res) => {
-//     for (const part of res.data) {
-//       api.get(`/api/parts/${part.id}/questions`).then((res) => {
-//         // for (const question of res.data) questions.value.push(question);
-//         part["questions"] = res.data;
-//       });
-//     }
-//     parts.value = res.data;
-//   });
-// });
+const test = ref({});
+const parts = ref([]);
+const documentation = ref({});
+const panel = ref([0]);
+const outBtn = () => {
+  const respone = confirm(
+    "Bạn có muốn thoát làm bài - Kết quả sẽ không được lưu"
+  );
+  if (respone) {
+    history.back();
+  }
+};
+const submitBtn = () => {
+  const respone = confirm("Bạn có muốn nộp bài làm - Kết quả sẽ được lưu");
+  if (respone) {
+    history.back();
+  }
+};
 
-// const loaded = ref(false);
-// const loading = ref(false);
+const userAnswers = ref([]);
 
-// const onClick = () => {
-//   loading = true;
-// };
+const result = ref({});
 
-const items = ref(["Luyện tập", "Làm full test", "Bình luận"]);
+const docs = ref([]);
+
+onMounted(() => {
+  api.get(`/api/documentations/${props.id}`).then((res) => {
+    documentation.value = res.data;
+    docs.value = res.data.doc.split(";");
+  });
+});
 </script>
 
 <style scoped>
-.audio .audio__player-play-and-title {
-  display: none;
+.main {
+  width: 60%;
+  margin: 0px auto;
+  padding: 20px 12px;
 }
 </style>

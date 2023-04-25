@@ -22,7 +22,7 @@ class History(BaseModel):
     user: str
     test_id: int
     test: str
-    grade: int
+    grade: str
     time: int
     answers: List[Union[str, None]]
     created_at: date
@@ -35,7 +35,7 @@ class HistoryPostResponse(BaseModel):
 class HistoryPostRequest(BaseModel):
     user_id: int
     test_id: int
-    grade: int
+    grade: str
     time: int
     answers: List[Optional[str]]
 

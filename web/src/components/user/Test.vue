@@ -29,6 +29,14 @@
             {{ part.name }}
           </v-chip>
         </v-chip-group>
+        <div v-for="part in parts" class="mb-4">
+          <v-card
+            v-if="part.paragraph && part.id == choosingPart"
+            class="py-4 px-6"
+          >
+            {{ part.paragraph }}
+          </v-card>
+        </div>
         <v-card
           class="do-test"
           v-for="(question, idx) in questions"
@@ -75,6 +83,7 @@
               v-for="question in part.questions"
               variant="outlined"
               :value="question.id"
+              :class="{ choosen: !!userAnswers[question.name] }"
             >
               {{ question.name }}
             </v-list-item>
@@ -169,14 +178,19 @@ const submitBtn = () => {
   const respone = confirm("Bạn có muốn nộp bài làm - Kết quả sẽ được lưu");
   if (respone) {
     checkAnswers();
-    api.post(`/api/histories`, result.value);
-    clearInterval(timerInterval.value);
-    router.replace(`/tests/${props.id}`);
+    const newHistory = ref(0);
+    api.post(`/api/histories`, result.value).then((res) => {
+      newHistory.value = res.data;
+      console.log(newHistory.value, res.data);
+      clearInterval(timerInterval.value);
+      router.replace(`/history/${res.data.id}`);
+    });
   }
 };
 
 // check answers of user
 const checkAnswers = () => {
+  const totalQues = JSON.parse(JSON.stringify(test.value)).total_ques;
   const grade = ref(0);
   const tempUserAnswers = JSON.parse(JSON.stringify(userAnswers.value));
   const tempTrueAnswers = JSON.parse(JSON.stringify(trueAnswers.value));
@@ -186,7 +200,7 @@ const checkAnswers = () => {
     }
   }
   result.value.time = timeElapsed.value;
-  result.value.grade = grade.value;
+  result.value.grade = `${grade.value}/${totalQues}`;
   result.value.answers = tempUserAnswers.slice(1, tempUserAnswers.length);
 };
 
@@ -195,7 +209,7 @@ onMounted(() => {
   result.value = {
     user_id: localStorage.id,
     test_id: props.id,
-    grade: 0,
+    grade: "",
     time: 0,
   };
   api.get(`/api/tests/${props.id}`).then((res) => {
@@ -300,5 +314,8 @@ onMounted(() => {
 .time-left-container {
   font-weight: 600;
   font-size: 1.2rem;
+}
+.choosen {
+  background-color: #bbbb;
 }
 </style>

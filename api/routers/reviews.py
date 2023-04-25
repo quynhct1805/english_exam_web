@@ -7,7 +7,7 @@ from models.reviews import Reviews
 from models.users import Users
 from models.tests import Tests
 from pydantic import BaseModel
-from datetime import datetime
+from datetime import datetime, date
 
 from starlette.responses import Response
 from fastapi.exceptions import HTTPException
@@ -23,8 +23,8 @@ class Review(BaseModel):
     test_id: int
     rate_stars: int
     comment: str
-    created_at: datetime
-    updated_at: datetime
+    created_at: date
+    updated_at: date
 
 
 class ReviewPostResponse(BaseModel):
@@ -54,6 +54,9 @@ async def get_all_reviews():
         .join(Tests, on=Tests.id == Reviews.test_id)
     )
     reviews = list(reviews.dicts())
+    for review in reviews:
+        review["created_at"] = review["created_at"].strftime("%d/%m/%Y %H:%M:%S")
+        review["updated_at"] = review["updated_at"].strftime("%d/%m/%Y %H:%M:%S")
     return reviews
 
 
@@ -67,10 +70,32 @@ async def get_review_by_id(review_id: int):
         .where(Reviews.id == review_id)
     )
     reviews = list(reviews.dicts())
+    for review in reviews:
+        review["created_at"] = review["created_at"].strftime("%d/%m/%Y %H:%M:%S")
+        review["updated_at"] = review["updated_at"].strftime("%d/%m/%Y %H:%M:%S")
     review = reviews[0] if len(reviews) > 0 else None
     if not review:
         raise HTTPException(HTTP_404_NOT_FOUND)
     return review
+
+
+@router.get("/api/tests/{test_id}/reviews", tags=["Reviews"])
+async def get_review_by_test_id(test_id: int):
+    """Get review by test id"""
+    reviews = (
+        Reviews.select(Reviews, Users.name.alias("user"), Tests.name.alias("test"))
+        .join(Users, on=Users.id == Reviews.user_id)
+        .join(Tests, on=Tests.id == Reviews.test_id)
+        .where(Reviews.test_id == test_id)
+    )
+    reviews = list(reviews.dicts())
+    for review in reviews:
+        review["created_at"] = review["created_at"].strftime("%d/%m/%Y %H:%M:%S")
+        review["updated_at"] = review["updated_at"].strftime("%d/%m/%Y %H:%M:%S")
+    # review = reviews[0] if len(reviews) > 0 else None
+    if not reviews:
+        raise HTTPException(HTTP_404_NOT_FOUND)
+    return reviews
 
 
 @router.post(

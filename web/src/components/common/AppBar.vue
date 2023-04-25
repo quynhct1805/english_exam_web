@@ -1,16 +1,20 @@
 <template>
-  <v-app-bar color="#E7F0F6" class="appbar">
+  <v-app-bar color="#185179" class="appbar">
     <router-link
       :to="logined > 0 ? { name: 'Home' } : { name: 'FirstPage' }"
       class="logo"
     >
-      <img src="@/assets/StudyTestlogo.png" height="48" />
+      <img src="@/assets/test.png" height="48" />
     </router-link>
     <v-spacer />
 
-    <v-list-item v-for="page of pages" :to="{ name: `${page.page}` }">{{
-      page.label
-    }}</v-list-item>
+    <v-list-item
+      class="class"
+      v-for="page of pages"
+      :to="{ name: `${page.page}` }"
+    >
+      {{ page.label }}
+    </v-list-item>
 
     <v-menu v-if="logined > 0">
       <template v-slot:activator="{ props }">
@@ -25,7 +29,7 @@
         <v-list-item :to="{ name: 'ProfilePage', params: { userId: userId } }">
           <v-list-item-title> Trang cá nhân </v-list-item-title>
         </v-list-item>
-        <slot name="admin-management"></slot>
+        <slot name="admin-management" v-if="role === 'admin'"></slot>
         <v-list-item @click="logout" :to="{ name: 'FirstPage' }">
           <v-list-item-title>Đăng xuất</v-list-item-title>
         </v-list-item>
@@ -60,6 +64,11 @@ const logout = () => localStorage.clear();
 </script>
 
 <style scoped>
+.appbar {
+  color: white !important;
+  font-size: 1.1rem !important;
+}
+
 .appbar .v-list-item {
   height: 100%;
   font-weight: 500;
@@ -69,11 +78,9 @@ const logout = () => localStorage.clear();
   margin-left: 12px;
 }
 .login-btn {
-  background-color: #283c74;
-  color: white;
-  text-transform: none;
-  padding: 0 12px;
-  margin-right: 12px;
+  background-color: #f0fefe;
+  color: black;
+  height: 40px !important;
 }
 .menu-profile {
   margin-top: 4px;

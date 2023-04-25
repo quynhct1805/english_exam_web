@@ -2,6 +2,12 @@
   <AppBar />
   <v-layout>
     <div class="main">
+      <v-btn
+        variant="text"
+        color="#10294d"
+        icon="mdi-arrow-left-thick"
+        :to="{ name: 'ListTest' }"
+      ></v-btn>
       <v-chip-group disabled>
         <v-chip draggable variant="outlined" :value="`${test.id}`">
           {{ test.category_code }}
@@ -22,9 +28,8 @@
           </div>
           <div class="mb-2"><strong>Kỹ năng</strong>: {{ test.skill }}</div>
           <div class="mb-2">
-            <strong>Thời gian làm bài</strong>: {{ test.time }} |
-            {{ test.total_part }} |
-            {{ test.total_ques }}
+            <strong>Thời gian làm bài</strong>: {{ test.time }} giây |
+            {{ test.total_ques }} câu | {{ test.total_part }} bài
           </div>
           <v-alert class="alert" v-if="showAlert" type="warning">
             {{ warning }}
@@ -45,20 +50,31 @@
           >
             Luyện tập
           </v-btn>
+          <Review />
         </div>
         <div class="answer" v-else>
-          <div v-for="part in parts" :key="part.id" class="mb-5 mt-2">
-            <strong style="text-transform: uppercase">{{ part.name }}</strong>
-            <div
-              class="question mb-3"
-              v-for="(question, index) in part.questions"
-              :key="question.id"
+          <v-expansion-panels class="mt-4 mb-4">
+            <v-expansion-panel
+              v-for="part in parts"
+              :key="part.id"
+              class="mb-2"
             >
-              <div>
-                <strong>{{ question.name }}</strong
-                >. {{ question.question }}
-              </div>
-              <!-- <div
+              <v-expansion-panel-title>
+                <strong style="text-transform: uppercase">{{
+                  part.name
+                }}</strong>
+              </v-expansion-panel-title>
+              <v-expansion-panel-text>
+                <div
+                  class="question mb-3"
+                  v-for="(question, index) in part.questions"
+                  :key="question.id"
+                >
+                  <div>
+                    <strong>{{ question.name }}</strong
+                    >. {{ question.question }}
+                  </div>
+                  <!-- <div
                 class="ml-6"
                 :class="{
                   'wrong-answer': !history.answers[index],
@@ -66,27 +82,29 @@
               >
                 {{ history.answers[index] ? "" : "Chưa trả lời" }}
               </div> -->
-              <span class="ml-6">Đáp án: &nbsp;</span>
-              <span
-                v-for="(ans, idx) in question.answers"
-                :class="{
-                  // 'wrong-answer': idx + 1 == history.answers[index],
-                  'true-answer': idx + 1 == question.true_answer,
-                }"
-                >{{ ans }} &emsp;
-              </span>
-              <br />
-              <span
-                class="watch-detail"
-                @click="
-                  (openDialog = true),
-                    (questionDetail = Object.assign({}, question))
-                "
-              >
-                [Chi tiết]
-              </span>
-            </div>
-          </div>
+                  <span class="ml-6">Đáp án: &nbsp;</span>
+                  <span
+                    v-for="(ans, idx) in question.answers"
+                    :class="{
+                      // 'wrong-answer': idx + 1 == history.answers[index],
+                      'true-answer': idx + 1 == question.true_answer,
+                    }"
+                    >{{ ans }} &emsp;
+                  </span>
+                  <br />
+                  <span
+                    class="watch-detail"
+                    @click="
+                      (openDialog = true),
+                        (questionDetail = Object.assign({}, question))
+                    "
+                  >
+                    [Chi tiết]
+                  </span>
+                </div>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-expansion-panels>
         </div>
       </div>
     </div>
@@ -106,6 +124,7 @@ import { ref, onMounted } from "vue";
 import AppBar from "@/components/common/AppBar";
 // import { useStore } from "@/components/store/store";
 import QuestionDetail from "@/components/user/QuestionDetail";
+import Review from "@/components/common/Review";
 
 const props = defineProps({
   id: String,
@@ -121,6 +140,7 @@ const questions = ref([]);
 const history = ref({});
 const openDialog = ref(false);
 const questionDetail = ref({});
+const commentKey = ref(0);
 
 const checkLogin = (param) => {
   if (param > 0) return;

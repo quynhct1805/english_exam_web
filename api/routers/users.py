@@ -43,7 +43,7 @@ class UserUpdateRequest(BaseModel):
 class UserHistories(BaseModel):
     id: int
     test: str
-    grade: int
+    grade: str
     time: int
     answers: List[Optional[str]]
     created_at: date

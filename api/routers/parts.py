@@ -22,7 +22,7 @@ class Part(BaseModel):
     test_id: int
     test_name: str = None
     total_ques: int
-    description: str
+    description: str = None
     audio: str = None
     paragraph: str = None
 
@@ -77,6 +77,8 @@ async def get_part(part_id):
 async def create_part(payload_: PartPostRequest):
     """Create a new part"""
     payload = payload_.dict()
+    if not payload["audio"]:
+        payload["audio"] = "music"
     part = Parts.create(**payload)
     return {"id": part.id}
 

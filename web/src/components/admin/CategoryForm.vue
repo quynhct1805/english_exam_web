@@ -92,7 +92,6 @@ const emit = defineEmits(["changeCategory"]);
 
 const createCategory = (param) => {
   api.post(`/api/categories`, param).then((res) => {
-    console.log(res.data);
     if (res.data.code === 400) {
       showAlert.value = true;
       error.value = res.data.message;
@@ -104,7 +103,6 @@ const createCategory = (param) => {
 
 const updateCategory = (param) => {
   api.patch(`/api/categories/${param.code}`, param).then((res) => {
-    console.log(res.data);
     emit("changeCategory", false);
   });
 };

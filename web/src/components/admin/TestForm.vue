@@ -118,7 +118,7 @@ const categories = ref([]);
 const showAlert = ref(false);
 const error = ref("");
 
-const emit = defineEmits(["changeTest"]);
+const emit = defineEmits(["changeTest", "infoNewTest"]);
 
 onMounted(() => {
   api.get("/api/categories").then((res) => {
@@ -128,21 +128,23 @@ onMounted(() => {
 
 const createTest = (param) => {
   api.post(`/api/tests`, param).then((res) => {
-    console.log(res.data);
-
-    // tests.value = res.data;
+    Object.assign(param, res.data);
+    const category_code = JSON.parse(JSON.stringify(categories.value)).filter(
+      (category) => category.id === param.category_id
+    );
+    Object.assign(param, { category_code: category_code[0].code });
+    emit("infoNewTest", param);
   });
 };
 
 const updateTest = (param) => {
   api.patch(`/api/tests/${test.value.id}`, param).then((res) => {
-    console.log(res.data);
-    // tests.value = res.data;
+    Object.assign(param, res.data);
+    emit("infoNewTest", param);
   });
 };
 
 function handledClickSave() {
-  console.log(JSON.parse(JSON.stringify(test.value)));
   const param = JSON.parse(JSON.stringify(test.value));
   if (
     _.isEmpty(param) ||
@@ -157,8 +159,6 @@ function handledClickSave() {
     error.value = "Vui lòng nhập thông tin bắt buộc!";
     return;
   } else {
-    delete param.category_code;
-    delete param.id;
     if (props.action === "add") createTest(param);
     else updateTest(param);
 

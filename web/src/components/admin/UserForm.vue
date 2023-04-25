@@ -101,7 +101,7 @@ const role = ref(["admin", "member"]);
 const showAlert = ref(false);
 const error = ref("");
 
-const emit = defineEmits(["changeUser"]);
+const emit = defineEmits(["changeUser", "infoNewUser"]);
 
 // onMounted(() => {
 //   api.get("/api/categories").then((res) => {
@@ -117,7 +117,8 @@ const createUser = (param) => {
       error.value = res.data.message;
       return;
     }
-    emit("changeUser", false);
+    Object.assign(param, res.data);
+    emit("infoNewUser", param);
   });
 };
 
@@ -125,7 +126,8 @@ const updateUser = (param) => {
   console.log(user);
   api.patch(`/api/users/${user.value.id}`, param).then((res) => {
     console.log(res.data);
-    emit("changeUser", false);
+    Object.assign(param, res.data);
+    emit("infoNewDoc", param);
   });
 };
 
@@ -145,6 +147,7 @@ function handledClickSave() {
     console.log(param);
     if (props.action === "add") createUser(param);
     else updateUser(param);
+    emit("changeUser", false);
   }
 }
 </script>
