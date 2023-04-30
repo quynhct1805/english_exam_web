@@ -149,12 +149,6 @@ const onClick = () => {
   width: 80%;
   margin: 0px auto;
 }
-.main .v-chip {
-  color: #1f3759;
-}
-.main .v-chip:hover {
-  background-color: #e8ebf3;
-}
 .main .search-input {
   width: 40%;
 }
@@ -187,6 +181,6 @@ const onClick = () => {
   margin-right: 4px;
 }
 .background {
-  background-color: #dfdede69;
+  background-color: #faf3dd;
 }
 </style>

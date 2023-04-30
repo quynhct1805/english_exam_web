@@ -33,7 +33,7 @@
             ></v-checkbox>
             <router-link
               :to="{ name: 'ForgotPassword' }"
-              style="color: #283c74"
+              color="indigo-darken-3"
             >
               Quên mật khẩu
             </router-link>
@@ -46,7 +46,7 @@
               class="mr-5"
               type="submit"
               @click="login()"
-              color="indigo-darken-3"
+              color="#4a7c59"
             >
               Đăng nhập
             </v-btn>
@@ -56,7 +56,7 @@
             <span
               class="changeAction"
               @click="(action = 'signup'), (showAlert = false), (error = '')"
-              style="color: #283c74; font-weight: bold"
+              style="color: #4a7c59; font-weight: bold"
             >
               Đăng ký
             </span>
@@ -129,7 +129,7 @@
             <span
               class="changeAction"
               @click="action = 'login'"
-              style="color: #283c74; font-weight: bold"
+              style="color: #4a7c59; font-weight: bold"
             >
               Đăng nhập
             </span>

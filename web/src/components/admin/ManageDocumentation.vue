@@ -184,7 +184,8 @@ const onClick = () => {
   margin: 0px auto;
 }
 .main .v-chip {
-  color: #1f3759;
+  color: #4a7c59;
+  font-weight:500
 }
 .main .v-chip:hover {
   background-color: #e8ebf3;
@@ -218,6 +219,6 @@ const onClick = () => {
   margin-right: 4px;
 }
 .background {
-  background-color: #dfdede69;
+  background-color: #faf3dd;
 }
 </style>

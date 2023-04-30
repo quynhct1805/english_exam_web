@@ -1,6 +1,7 @@
 <template>
   <AppBar />
-  <v-layout>
+  <img style="width: 100%" src="@/assets/3.png" />
+  <v-layout style="margin-top: -12px;">
     <div class="main">
       <slot name="welcome"></slot>
       <div class="list-test">
@@ -78,7 +79,7 @@ onMounted(() => {
   font-weight: 500;
 }
 .v-footer {
-  background-color: #185179;
+  background-color: #4a7c59;
   color: white;
 }
 </style>

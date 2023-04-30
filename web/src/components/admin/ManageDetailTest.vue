@@ -4,7 +4,7 @@
     <div class="main px-3">
       <v-btn
         variant="text"
-        color="#10294d"
+        color="#4a7c59"
         icon="mdi-arrow-left-thick"
         @click="$router.back()"
       ></v-btn>
@@ -13,7 +13,10 @@
       </div>
       <div class="content">
         <v-expansion-panels v-model="panel">
-          <v-expansion-panel title="Thông tin cơ bản">
+          <v-expansion-panel> 
+            <v-expansion-panel-title>
+              <strong>Thông tin cơ bản</strong>
+            </v-expansion-panel-title>
             <v-expansion-panel-text>
               <div>Thể loại: {{ test.category_code }}</div>
               <div>Kỹ năng: {{ test.skill }}</div>
@@ -29,17 +32,17 @@
             :key="part.id"
             class="question-info"
           >
-            <v-expansion-panel-title>
-              {{ part.name }}
-              <template v-slot:actions="{ expanded }">
-                <v-btn
-                  variant="text"
-                  :color="!expanded ? 'teal' : ''"
-                  :icon="expanded ? 'mdi-pencil' : 'mdi-check'"
-                  size="small"
-                  @click="deleteQuestion(ques.id, indexPart)"
-                ></v-btn>
-              </template>
+            <v-expansion-panel-title expand-icon="mdi-menu-down">
+              <strong>{{ part.name }}</strong>
+              <v-spacer></v-spacer>
+              <v-btn
+                variant="text"
+                color="error"
+                icon="mdi-delete"
+                size="small"
+                style="height: 18px; width: 18px"
+                @click="deletePart(part.id, indexPart)"
+              ></v-btn>
             </v-expansion-panel-title>
 
             <v-expansion-panel-text>
@@ -92,7 +95,7 @@
               <v-btn
                 class="add-btn included"
                 variant="text"
-                color="#10294d"
+                color="#4a7c59"
                 icon="mdi-plus-circle-outline"
                 @click="(addQues = true), (newQues.part_id = part.id)"
               ></v-btn>
@@ -150,7 +153,7 @@
                     </div>
                     <v-btn
                       variant="outlined"
-                      color="#10294d"
+                      color="#4a7c59"
                       @click="addAnswer()"
                     >
                       Thêm đáp án
@@ -193,7 +196,7 @@
         <v-btn
           class="add-btn included mb-2"
           variant="outlined"
-          color="#10294d"
+          color="#4a7c59"
           prepend-icon="mdi-plus"
           @click="addPart = true"
           >Thêm bài
@@ -223,7 +226,7 @@
                   type="number"
                   v-model="newPart.total_ques"
                   variant="outlined"
-                  label="Tổng số câu hỏi"
+                  label="Tổng số câu hỏi *"
                   density="compact"
                   :rules="numberRules"
                 ></v-text-field>
@@ -375,6 +378,11 @@ const saveNewPart = () => {
     return;
   }
   api.post(`/api/parts`, newPart.value).then((res) => {
+    Object.assign(newPart.value, res.data);
+    parts.value.push(
+      JSON.parse(JSON.stringify(newPart.value))
+    );
+    console.log(res.data);
     console.log(res.data);
     newPart.value = {
       name: "",
@@ -388,26 +396,41 @@ const saveNewPart = () => {
   addPart.value = false;
   showAlert.value = false;
 };
+const deletePart = (partId, index) => {
+  const respone = confirm("Bạn có muốn xóa bài?");
+  if (respone) {
+    // console.log(questionId, index);
+    parts.value = parts.value.filter(
+      (object) => {
+        return object.id !== partId;
+      }
+    );
+    console.log(JSON.parse(JSON.stringify(parts.value)));
+    api.delete(`/api/parts/${partId}`).then((res) => {
+      snackbar.value = true;
+    });
+  }
+};
 
 const add = (id) => {
   addQues.value = true;
   newQues.part_id = id;
 };
 
-const outBtn = () => {
-  const respone = confirm(
-    "Bạn có muốn thoát làm bài - Kết quả sẽ không được lưu"
-  );
-  if (respone) {
-    history.back();
-  }
-};
-const submitBtn = () => {
-  const respone = confirm("Bạn có muốn nộp bài làm - Kết quả sẽ được lưu");
-  if (respone) {
-    history.back();
-  }
-};
+// const outBtn = () => {
+//   const respone = confirm(
+//     "Bạn có muốn thoát làm bài - Kết quả sẽ không được lưu"
+//   );
+//   if (respone) {
+//     history.back();
+//   }
+// };
+// const submitBtn = () => {
+//   const respone = confirm("Bạn có muốn nộp bài làm - Kết quả sẽ được lưu");
+//   if (respone) {
+//     history.back();
+//   }
+// };
 
 const onClickOutside = () => {
   addQues.value = false;

@@ -22,13 +22,13 @@
             v-model="newCmt.rate_stars"
             size="x-small"
             half-increments
-            active-color="#0e274c"
+            active-color="#4a7c59"
           ></v-rating>
         </div>
 
-        <v-banner-actions color="#0e274c">
-          <v-btn>Huy</v-btn>
-          <v-btn variant="tonal" @click="saveCmt()">Binh luan</v-btn>
+        <v-banner-actions color="#4a7c59">
+          <v-btn>Hủy</v-btn>
+          <v-btn variant="tonal" @click="saveCmt()">Bình luận</v-btn>
         </v-banner-actions>
       </v-banner>
     </div>
@@ -42,7 +42,7 @@
           size="x-small"
           half-increments
           v-model="comment.rate_stars"
-          active-color="#0e274c"
+          active-color="#4a7c59"
           readonly
         ></v-rating>
         <v-card-text class="pt-0 pb-4">{{ comment.comment }}</v-card-text>

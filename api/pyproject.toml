@@ -7,7 +7,7 @@ authors = ["quynhct"]
 [tool.poetry.dependencies]
 python = "^3.8"
 fastapi = "^0.75.0"
-uvicorn = "^0.17.6"
+uvicorn = "^0.20.0"
 peewee = "^3.15.4"
 psycopg2-binary = "^2.9.3"
 pydash = "^5.1.2"

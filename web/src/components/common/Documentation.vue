@@ -56,11 +56,18 @@ onMounted(() => {
   width: 28%;
   margin: 0 19px;
   margin-bottom: 20px;
+  transition: transform .4s;
 }
+
+.documentation-info .v-card:hover {
+  background-color: rgb(200, 213, 185, 0.1);
+  transform: scale(1.1);
+}
+
 .v-card-text {
   padding: 8px 16px;
 }
 .v-card-actions {
-  color: #21385a;
+  color: #4a7c59;
 }
 </style>

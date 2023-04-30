@@ -45,8 +45,8 @@
             <v-select
               v-model="documentation.type"
               :items="typeDoc"
-              item-title="name"
-              item-value="id"
+              item-title="label"
+              item-value="type"
               label="Dạng tài liệu *"
               variant="underlined"
               :rules="textRules"
@@ -87,7 +87,7 @@
       >
         Hủy
       </v-btn>
-      <v-btn color="#62311a" text @click="handledClickSave()"> Lưu </v-btn>
+      <v-btn color="#4a7c59" text @click="handledClickSave()"> Lưu </v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -130,7 +130,12 @@ const checkFile = () => {
 
 const files = ref([]);
 
-const typeDoc = ref(["Từ vựng", "Mẫu câu hỏi"]);
+// const typeDoc = ref(["Từ vựng", "Mẫu câu hỏi"]);
+const typeDoc = ref([
+  {type: 'vocabulary', label: "Từ vựng"},
+  {type: 'example', label:"Mẫu câu hỏi"}
+]
+)
 
 // const time = ref(new Date().getTime());
 // const date = ref(new Date());
@@ -181,7 +186,7 @@ function handledClickSave() {
     param.files.push(file);
   }
   // param.files.push(files.value);
-  if (_.isEmpty(param) || !param.name || !param.category_id || !param.skill) {
+  if (_.isEmpty(param) || !param.name || !param.category_id || !param.skill || !param.type) {
     showAlert.value = true;
     error.value = "Vui lòng nhập thông tin bắt buộc!";
     return;

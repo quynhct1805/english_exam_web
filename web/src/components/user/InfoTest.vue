@@ -4,7 +4,7 @@
     <div class="main">
       <v-btn
         variant="text"
-        color="#10294d"
+        color="#4a7c59"
         icon="mdi-arrow-left-thick"
         :to="{ name: 'ListTest' }"
       ></v-btn>
@@ -45,7 +45,7 @@
                   }
                 : {}
             "
-            color="#21385a"
+            color="#4a7c59"
             @click="checkLogin(logined)"
           >
             Luyện tập
@@ -182,13 +182,14 @@ const items = ref(["Luyện tập", "Làm full test", "Bình luận"]);
   padding: 20px 12px;
 }
 .main .v-chip {
-  color: #1f3759;
+  color: #4a7c59;
+  font-weight:500
 }
 .main .title {
-  color: #1f3759;
+  color: #4a7c59;
   font-size: 2rem;
   text-transform: uppercase;
-  font-weight: 500;
+  font-weight: 600;
 }
 .main .search-input {
   width: 50%;

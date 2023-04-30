@@ -57,7 +57,8 @@ const logout = () => localStorage.clear();
   margin-left: 12px;
 }
 .login-btn {
-  background-color: #283c74;
+  /* background-color: #283c74; */
+  background-color: #4a7c59;
   color: white;
   text-transform: none;
   padding: 0 12px;

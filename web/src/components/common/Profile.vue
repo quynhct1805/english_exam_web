@@ -155,6 +155,6 @@ onMounted(() => {
   margin: 0px;
 }
 .background {
-  background-color: #dfdede69;
+  background-color: #faf3dd;
 }
 </style>

@@ -75,7 +75,7 @@
         <v-btn color="blue darken-4" text @click="emit('changeProfile', false)">
           Hủy
         </v-btn>
-        <v-btn color="#62311a" text @click="handledClickSave"> Lưu </v-btn>
+        <v-btn color="#4a7c59" text @click="handledClickSave"> Lưu </v-btn>
       </v-card-actions>
     </v-card>
   </v-form>

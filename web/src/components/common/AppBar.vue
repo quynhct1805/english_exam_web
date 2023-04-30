@@ -1,10 +1,10 @@
 <template>
-  <v-app-bar color="#185179" class="appbar">
+  <v-app-bar color="#4a7c59" class="appbar">
     <router-link
       :to="logined > 0 ? { name: 'Home' } : { name: 'FirstPage' }"
       class="logo"
     >
-      <img src="@/assets/test.png" height="48" />
+      <img src="@/assets/STUDYENG1.png" height="48" />
     </router-link>
     <v-spacer />
 
@@ -45,7 +45,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 
-const logined = ref(localStorage.length);
+const logined = ref(!!localStorage.id);
 const role = ref(localStorage.role);
 const userId = ref(localStorage.id);
 const pages = ref([

@@ -5,7 +5,7 @@
       variant="text"
       icon="mdi-close-thick"
       size="x-small"
-      color="#1f3759"
+      color="#c8d5b9"
       @click="emit('watchDetail', false)"
     ></v-btn>
     <v-card-content class="px-6 py-10">

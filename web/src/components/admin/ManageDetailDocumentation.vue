@@ -2,93 +2,97 @@
   <AppBar />
   <v-layout>
     <div class="main">
-      <v-btn
-        variant="text"
-        color="#10294d"
-        icon="mdi-arrow-left-thick"
-        @click="$router.back()"
-      ></v-btn>
-      <div class="title mb-3">
-        <h1 class="documentation-name">
-          [{{ documentation.category_code }}] {{ documentation.name }}
-        </h1>
-      </div>
-      <div class="content">
-        <v-expansion-panels v-model="panel" class="mb-4">
-          <v-expansion-panel>
-            <v-expansion-panel-title>
-              <strong>Thông tin</strong>
-            </v-expansion-panel-title>
-            <v-expansion-panel-text>
-              <div class="mb-1">
-                <strong>Kỹ năng:</strong> {{ documentation.skill }}
-              </div>
-              <div class="mb-1">
-                <strong>Mô tả:</strong> {{ documentation.description }}
-              </div>
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-expansion-panels>
-        <div>{{ documentation.type }}</div>
-        <v-expansion-panels>
-          <v-expansion-panel>
-            <v-expansion-panel-title>
-              <strong>Tài liệu</strong>
-            </v-expansion-panel-title>
-            <v-expansion-panel-text>
-              <div v-for="doc in docs">{{ doc }}</div>
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-expansion-panels>
+      <!-- <DetailDocumentation :id="id"/> -->
+      <DetailDocumentation :id="id" :editDoc="documentation.doc" :key="openDialog">
+        <v-expansion-panel-title>
+          <strong>Tài liệu</strong>
+          <v-spacer></v-spacer>
+          <v-btn variant="text" color="warning" icon="mdi-pencil-outline" size="small" style="height: 24px; width: 24px"
+            @click="openDialog = true"></v-btn>
+        </v-expansion-panel-title>
+      </DetailDocumentation>
 
-        <!-- <div>Tài liệu: {{ documentation.files }}</div> -->
-      </div>
+      <v-dialog v-model="openDialog" persistent>
+        <v-card class="update-documentation-form">
+          <v-card-title>Sửa tài liệu tham khảo</v-card-title>
+          <v-divider />
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col cols="12">
+                  <v-textarea v-model="documentation.doc" label="Tài liệu *" persistent-hint variant="underlined"
+                    rows="20" no-resize></v-textarea>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+
+          <v-alert class="alert" v-if="showAlert" type="error">
+            {{ error }}
+          </v-alert>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-4" text @click="openDialog = false">
+              Hủy
+            </v-btn>
+            <v-btn color="#4a7c59" text @click="handledClickSave()"> Lưu </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </div>
   </v-layout>
 </template>
 
 <script setup>
 import api from "@/plugins/url";
-import { ref, onMounted, computed } from "vue";
-// import { useStore } from "@/components/store/users";
+import { ref, onMounted } from 'vue'
 import AppBar from "@/components/admin/AppBar";
+import DetailDocumentation from "../common/DetailDocumentation.vue";
+import _ from "lodash";
 
 const props = defineProps({
   id: String,
 });
 
-// const store = useStore();
-// const { user, getUser, userId } = store;
+const openDialog = ref(false);
 
-const test = ref({});
-const parts = ref([]);
 const documentation = ref({});
-const outBtn = () => {
-  const respone = confirm(
-    "Bạn có muốn thoát làm bài - Kết quả sẽ không được lưu"
-  );
-  if (respone) {
-    history.back();
-  }
-};
-const submitBtn = () => {
-  const respone = confirm("Bạn có muốn nộp bài làm - Kết quả sẽ được lưu");
-  if (respone) {
-    history.back();
-  }
-};
-const panel = ref([0]);
-
-const userAnswers = ref([]);
-
-const result = ref({});
-
 const docs = ref([]);
+
+const updateDocumentation = (param) => {
+  api
+    .patch(`/api/documentations/${documentation.value.id}`, param)
+    .then((res) => {
+      documentation.value = Object.assign(documentation.value, res.data);
+    });
+};
+
+function handledClickSave() {
+  const param = JSON.parse(JSON.stringify(documentation.value));
+  if (_.isEmpty(param) || !param.name || !param.category_id || !param.skill || !param.type) {
+    showAlert.value = true;
+    error.value = "Vui lòng nhập thông tin bắt buộc!";
+    return;
+  } else {
+    if (props.action === "add") createDocumentation(param);
+    else updateDocumentation(param);
+
+    // emit("changeDocumentation", false);
+    openDialog.value = false;
+  }
+}
 
 onMounted(() => {
   api.get(`/api/documentations/${props.id}`).then((res) => {
     documentation.value = res.data;
-    docs.value = res.data.doc.split(";");
+    if (res.data.type === 'vocabulary') docs.value = res.data.doc.split(";");
+    else {
+      docs.value = res.data.doc.split("\n\n\n")
+      for (const [idx, doc] of docs.value.entries()) {
+        docs.value[idx] = doc.split(";")
+      }
+    }
   });
 });
 </script>
@@ -98,5 +102,14 @@ onMounted(() => {
   width: 60%;
   margin: 0px auto;
   padding: 20px 12px;
+}
+
+.update-documentation-form {
+  width: 80vw;
+  height: 72vh;
+}
+
+.update-documentation-form .v-card-title {
+  text-transform: uppercase;
 }
 </style>

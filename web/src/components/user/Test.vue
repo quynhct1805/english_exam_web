@@ -29,16 +29,17 @@
             {{ part.name }}
           </v-chip>
         </v-chip-group>
-        <div v-for="part in parts" class="mb-4">
+        <div v-for="(part, index) in parts" class="mt-4">
           <v-card
-            v-if="part.paragraph && part.id == choosingPart"
-            class="py-4 px-6"
+          v-if="part.paragraph && part.id == choosingPart"
+          class="pb-4 px-6"
           >
+          <v-card-title>Passage {{ index + 1 }}</v-card-title>
             {{ part.paragraph }}
           </v-card>
         </div>
         <v-card
-          class="do-test"
+          class="do-test mt-4"
           v-for="(question, idx) in questions"
           :key="question.part_id"
         >
@@ -270,7 +271,7 @@ onMounted(() => {
 }
 .do-test {
   max-height: 800px;
-  overflow: scroll;
+  overflow-y: scroll;
 }
 .question {
   margin: 8px 0;
@@ -316,6 +317,6 @@ onMounted(() => {
   font-size: 1.2rem;
 }
 .choosen {
-  background-color: #bbbb;
+  background-color: #c8d5b9;
 }
 </style>

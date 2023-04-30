@@ -4,7 +4,7 @@
     <div class="main">
       <v-btn
         variant="text"
-        color="#10294d"
+        color="#4a7c59"
         icon="mdi-arrow-left-thick"
         @click="$router.replace(`/profile/${userId}`)"
       ></v-btn>
@@ -17,7 +17,7 @@
         <div>Tổng thời gian làm bài: {{ history.time }} giây</div>
         <div>Ngày làm bài: {{ history.created_at }}</div>
       </div>
-      <v-btn class="my-3" variant="text" @click="watchDetail = !watchDetail">
+      <v-btn class="my-3" variant="outlined" @click="watchDetail = !watchDetail" color="#4a7c59">
         Chi tiết
       </v-btn>
       <div class="detail" v-if="watchDetail">
@@ -123,7 +123,8 @@ onMounted(() => {
   padding: 20px 12px;
 }
 .main .v-chip {
-  color: #1f3759;
+  color: #4a7c59;
+  font-weight:500
 }
 .main .title {
   font-size: 2rem;
@@ -131,10 +132,10 @@ onMounted(() => {
   font-weight: 500;
 }
 .detail .test-name {
-  color: #1f3759;
+  color: #4a7c59;
   font-size: 1.4rem;
   text-transform: uppercase;
-  font-weight: 500;
+  font-weight: 600;
 }
 .main .search-input {
   width: 50%;

@@ -1,14 +1,13 @@
 <template>
   <FirstPage>
     <template v-slot:welcome>
-      <div class="welcome text-h5">Xin chào, {{ userName }}!</div>
+      <div style="font-family: 'Lucida Console'" class="welcome text-h5">Xin chào, {{ userName }}!</div>
     </template>
   </FirstPage>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { useStore } from "@/components/store/store";
+import { ref } from "vue";
 import FirstPage from "@/components/common/FirstPage";
 
 const userName = ref(localStorage.name);

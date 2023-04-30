@@ -32,7 +32,7 @@ class Documentation(BaseModel):
     category_id: int
     category_code: str
     doc: str = None
-    type: str
+    type: str = None
 
 
 class DocumentationPostRequest(BaseModel):
@@ -56,6 +56,7 @@ class DocumentationPatchRequest(BaseModel):
     files: Optional[List[dict]]
     description: Optional[str]
     doc: Optional[str]
+    type: Optional[str]
 
 
 @router.get(

@@ -12,11 +12,9 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn
-          variant="outlined"
-          :to="{
-            name: 'InfoTest',
-            params: { testId: test.id },
+            <v-btn variant="outlined" :to="{
+              name: 'InfoTest',
+              params: { testId: test.id },
           }"
         >
           Chi tiết
@@ -43,7 +41,6 @@ const role = ref(localStorage.role);
 
 onMounted(() => {
   api.get("/api/tests").then((res) => {
-    console.log(role.value);
     if (
       (["Home", "FirstPage"].includes(router.currentRoute.value.name) &&
         role.value === "member") ||
@@ -67,19 +64,37 @@ onMounted(() => {
   justify-content: start;
   flex-wrap: wrap;
 }
+
 .test-info .v-card {
   width: 28%;
   margin: 0 19px;
   margin-bottom: 20px;
+  transition: transform .4s;
 }
+
+.test-info .v-card:hover {
+  background-color: rgb(200, 213, 185, 0.1);
+  transform: scale(1.1);
+}
+
 .v-card-text {
   padding: 8px 16px;
 }
+
 .v-card-actions {
-  color: #21385a;
+  color: #4a7c59;
 }
 
 .test-info-admin {
   justify-content: start !important;
+}
+
+
+.v-card {
+  transition: opacity .4s ease-in-out;
+}
+
+.show-btns {
+  color: rgba(255, 255, 255, 1) !important;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <AppBar />
   <v-layout>
-    <v-btn variant="outlined" color="#964a27" @click="$router.back()">
+    <v-btn variant="outlined" color="#4a7c59" @click="$router.back()">
       <v-icon icon="mdi-arrow-left-thick"></v-icon>
     </v-btn>
     <v-container>
