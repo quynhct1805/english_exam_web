@@ -13,7 +13,7 @@
       </div>
       <div class="content">
         <v-expansion-panels v-model="panel">
-          <v-expansion-panel> 
+          <v-expansion-panel>
             <v-expansion-panel-title>
               <strong>Thông tin cơ bản</strong>
             </v-expansion-panel-title>
@@ -71,6 +71,8 @@
                           @click="deleteQuestion(ques.id, indexPart)"
                         ></v-btn>
                       </div>
+                      <div>{{ ques.true_answer }}</div>
+                      <div>{{ ques.answers }}</div>
                       <v-row class="mt-0">
                         <v-col cols="auto" class="pe-0">
                           <strong> Đáp án: &nbsp;</strong>
@@ -342,6 +344,14 @@ const saveNewQues = (index) => {
     );
     console.log(res.data);
   });
+  newQues.value = {
+    name: "",
+    part_id: 0,
+    question: "",
+    answers: [],
+    true_answer: "",
+    explaination: "",
+  };
   addQues.value = false;
 };
 
@@ -379,9 +389,7 @@ const saveNewPart = () => {
   }
   api.post(`/api/parts`, newPart.value).then((res) => {
     Object.assign(newPart.value, res.data);
-    parts.value.push(
-      JSON.parse(JSON.stringify(newPart.value))
-    );
+    parts.value.push(JSON.parse(JSON.stringify(newPart.value)));
     console.log(res.data);
     console.log(res.data);
     newPart.value = {
@@ -400,11 +408,9 @@ const deletePart = (partId, index) => {
   const respone = confirm("Bạn có muốn xóa bài?");
   if (respone) {
     // console.log(questionId, index);
-    parts.value = parts.value.filter(
-      (object) => {
-        return object.id !== partId;
-      }
-    );
+    parts.value = parts.value.filter((object) => {
+      return object.id !== partId;
+    });
     console.log(JSON.parse(JSON.stringify(parts.value)));
     api.delete(`/api/parts/${partId}`).then((res) => {
       snackbar.value = true;
