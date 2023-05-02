@@ -56,7 +56,7 @@ import { useRouter } from "vue-router";
 
 const props = defineProps({
     id: String,
-    editDoc: {type: String, default: ''}
+    editDoc: { type: String, default: '' }
 });
 
 const documentation = ref({});
@@ -78,46 +78,4 @@ onMounted(() => {
 });
 </script>
   
-<style scoped>
-.test-info {
-    display: flex;
-    margin-top: 40px;
-    padding: 0 20px;
-    justify-content: start;
-    flex-wrap: wrap;
-}
-
-.test-info .v-card {
-    width: 28%;
-    margin: 0 19px;
-    margin-bottom: 20px;
-    transition: transform .4s;
-}
-
-.test-info .v-card:hover {
-    background-color: rgb(200, 213, 185, 0.1);
-    transform: scale(1.1);
-}
-
-.v-card-text {
-    padding: 8px 16px;
-}
-
-.v-card-actions {
-    color: #4a7c59;
-}
-
-.test-info-admin {
-    justify-content: start !important;
-}
-
-
-.v-card {
-    transition: opacity .4s ease-in-out;
-}
-
-.show-btns {
-    color: rgba(255, 255, 255, 1) !important;
-}
-</style>
-  
+<style scoped></style>

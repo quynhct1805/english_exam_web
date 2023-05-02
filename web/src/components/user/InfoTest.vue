@@ -87,7 +87,7 @@
                     v-for="(ans, idx) in question.answers"
                     :class="{
                       // 'wrong-answer': idx + 1 == history.answers[index],
-                      'true-answer': idx + 1 == question.true_answer,
+                      'true-answer': (ans.toLowerCase().split(/\.\s|\./).includes(question.true_answer.toLowerCase())),
                     }"
                     >{{ ans }} &emsp;
                   </span>

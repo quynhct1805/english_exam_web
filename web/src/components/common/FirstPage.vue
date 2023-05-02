@@ -43,7 +43,6 @@ import Documentation from "@/components/common/Documentation";
 
 const store = useStore();
 const { tests, getTests } = store;
-const userName = ref(localStorage.name);
 const icons = ref([
   "mdi-facebook",
   "mdi-twitter",

@@ -2,7 +2,6 @@
   <AppBar />
   <v-layout>
     <div class="main">
-      <!-- <DetailDocumentation :id="id"/> -->
       <DetailDocumentation :id="id" :editDoc="documentation.doc" :key="openDialog">
         <v-expansion-panel-title>
           <strong>Tài liệu</strong>
@@ -17,11 +16,11 @@
           <v-card-title>Sửa tài liệu tham khảo</v-card-title>
           <v-divider />
           <v-card-text>
-            <v-container>
+            <v-container class="pa-0">
               <v-row>
                 <v-col cols="12">
                   <v-textarea v-model="documentation.doc" label="Tài liệu *" persistent-hint variant="underlined"
-                    rows="20" no-resize></v-textarea>
+                    rows="22" no-resize hide-details></v-textarea>
                 </v-col>
               </v-row>
             </v-container>
@@ -105,8 +104,9 @@ onMounted(() => {
 }
 
 .update-documentation-form {
-  width: 80vw;
-  height: 72vh;
+  width: 70vw;
+  height: 70vh;
+  overflow-y: hidden !important;
 }
 
 .update-documentation-form .v-card-title {

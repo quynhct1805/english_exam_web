@@ -15,7 +15,6 @@ const routes = [
     path: "/tests",
     name: "ListTest",
     component: () => import("@/components/user/ListTest"),
-    // props: router => ({id: router.params.id})
   },
   {
     path: "/tests/:testId",
@@ -27,7 +26,6 @@ const routes = [
     path: "/documentations",
     name: "Documentation",
     component: () => import("@/components/user/Documentation"),
-    // props: router => ({id: router.params.id})
   },
   {
     path: "/documentations/:documentationId",
@@ -45,25 +43,21 @@ const routes = [
     path: "/login",
     name: "Login",
     component: () => import("@/components/common/Login"),
-    // props: router => ({id: router.params.id})
   },
   {
     path: "/forgotpassword",
     name: "ForgotPassword",
     component: () => import("@/components/common/ForgotPassword"),
-    // props: router => ({id: router.params.id})
   },
   {
     path: "/changepassword",
     name: "ChangePassword",
     component: () => import("@/components/common/ChangePassword"),
-    // props: (router) => ({ userId: router.params.userId }),
   },
   {
     path: "/admin/tests",
     name: "ManageTest",
     component: () => import("@/components/admin/ManageTest"),
-    // props: (router) => ({ id: router.params.id }),
   },
   {
     path: "/admin/tests/:testId",
@@ -75,7 +69,6 @@ const routes = [
     path: "/admin/documentations",
     name: "ManageDocumentation",
     component: () => import("@/components/admin/ManageDocumentation"),
-    // props: (router) => ({ id: router.params.id }),
   },
   {
     path: "/admin/documentations/:documentationId",
@@ -87,7 +80,6 @@ const routes = [
     path: "/admin/users",
     name: "ManageUser",
     component: () => import("@/components/admin/ManageUser"),
-    // props: (router) => ({ id: router.params.id }),
   },
   {
     path: "/admin/users/:userId",
@@ -99,7 +91,6 @@ const routes = [
     path: "/admin/categories",
     name: "ManageCategory",
     component: () => import("@/components/admin/ManageCategory"),
-    // props: (router) => ({ id: router.params.id }),
   },
   {
     path: "/profile/:userId",

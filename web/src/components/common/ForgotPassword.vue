@@ -86,14 +86,11 @@ export default {
         console.log(respone);
 
         if (respone) {
-          // console.log(11111, JSON.parse(JSON.stringify(user.value)));
-          // console.log(tempUser);
           const param = _.omit(tempUser, "id");
           param["code"] = null;
           console.log(param);
           api.patch(`/api/users/${tempUser.id}`, param);
           router.back();
-          // router.replace(`/tests/${props.id}`);
         }
       } else router.back();
     };
@@ -103,7 +100,6 @@ export default {
 
   methods: {
     sendEmail() {
-      // console.log(11111, JSON.parse(JSON.stringify(this.users)));
       for (const user of JSON.parse(JSON.stringify(this.users))) {
         if (user.email === this.user.email) {
           this.user = user;
@@ -112,7 +108,6 @@ export default {
       const tempUser = JSON.parse(JSON.stringify(this.user));
       const param = _.omit(tempUser, "id");
       param["code"] = this.result;
-      // console.log(param);
       api.patch(`/api/users/${tempUser.id}`, param);
       emailjs
         .sendForm(

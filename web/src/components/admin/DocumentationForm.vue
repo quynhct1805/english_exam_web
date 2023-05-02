@@ -98,14 +98,12 @@ import api from "@/plugins/url";
 import { useStore } from "@/components/store/store";
 import { useRules } from "../store/rules";
 import _ from "lodash";
-// import { DateTime } from "luxon";
 
 const props = defineProps({
   documentationInfo: Object,
   action: String,
 });
 
-// const documentationId = props.documentation ? props.documentation.id : "";
 const documentation = ref(
   _.cloneDeep(JSON.parse(JSON.stringify(props.documentationInfo)))
 );

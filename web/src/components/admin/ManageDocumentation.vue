@@ -131,12 +131,9 @@ import { useStore } from "@/components/store/store";
 
 const store = useStore();
 const { documentations, getDocumentations, categories, getCategories } = store;
-// const categories = ref([]);
-// const documentations = ref([]);
 
 const openDialog = ref(false);
 const action = ref("");
-// const defaultFilteredCategory = ref("all");
 const documentationInfo = ref({});
 
 const snackbar = ref(false);
@@ -165,7 +162,6 @@ onMounted(() => {
   getCategories();
 });
 
-const loaded = ref(false);
 const loading = ref(false);
 
 const onClick = () => {

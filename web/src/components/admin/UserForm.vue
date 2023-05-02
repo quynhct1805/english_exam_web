@@ -81,7 +81,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, computed } from "vue";
+import { ref } from "vue";
 import _ from "lodash";
 import api from "@/plugins/url";
 import { useStore } from "@/components/store/store";
@@ -92,7 +92,6 @@ const props = defineProps({
   action: String,
 });
 
-const store = useStore();
 const rules = useRules();
 const { textRules, emailRules, phoneRules, passwordRules } = rules;
 const user = ref(_.cloneDeep(JSON.parse(JSON.stringify(props.userInfo))));
@@ -102,12 +101,6 @@ const showAlert = ref(false);
 const error = ref("");
 
 const emit = defineEmits(["changeUser", "infoNewUser"]);
-
-// onMounted(() => {
-//   api.get("/api/categories").then((res) => {
-//     categories.value = res.data;
-//   });
-// });
 
 const createUser = (param) => {
   api.post(`/api/users`, param).then((res) => {

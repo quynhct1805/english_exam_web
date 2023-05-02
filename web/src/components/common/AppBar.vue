@@ -59,7 +59,6 @@ const pages = ref([
   },
 ]);
 
-const profile = ref([{ title: "Trang cá nhân" }, { title: "Đăng xuất" }]);
 const logout = () => localStorage.clear();
 </script>
 

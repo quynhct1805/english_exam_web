@@ -52,7 +52,7 @@
                 :class="{
                   'wrong-answer':
                     idx + 1 == history.answers[parseInt(question.name) - 1],
-                  'true-answer': idx + 1 == question.true_answer,
+                  'true-answer': (ans.toLowerCase().split(/\.\s|\./).includes(question.true_answer.toLowerCase())),
                 }"
                 >{{ ans }} &emsp;
               </span>

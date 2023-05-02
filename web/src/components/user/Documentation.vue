@@ -84,20 +84,4 @@ const onClick = () => {
 .main .select-input {
   width: 20%;
 }
-
-/* .documentation-info {
-  display: flex;
-  margin-top: 40px;
-  padding: 0 20px;
-  justify-content: space-evenly;
-}
-.documentation-info .v-card {
-  width: 28%;
-}
-.v-card-text {
-  padding: 8px 16px;
-}
-.v-card-actions {
-  color: #21385a;
-} */
 </style>
