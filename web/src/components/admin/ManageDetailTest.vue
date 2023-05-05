@@ -79,12 +79,12 @@
                   </v-col>
                   <v-col cols="12">
                     <v-textarea v-model="newQues.question" variant="outlined" label="Câu hỏi" density="compact"
-                      rows="2"></v-textarea>
+                      rows="1"></v-textarea>
                   </v-col>
                   <v-col cols="8" class="mr-4 mb-3">
                     <div v-for="(ans, idx) in newQues.answers" :key="idx" class="answer-input">
                       <v-text-field v-model="newQues.answers[idx]" class="mb-2" variant="outlined" label="Đáp án"
-                        density="compact" hide-details></v-text-field>
+                        density="compact" hide-details autofocus></v-text-field>
                       <v-btn class="add-ans" variant="text" icon="mdi-close-thick" size="small"
                         @click="removeAnswer(idx)">
                       </v-btn>
@@ -99,7 +99,7 @@
                   </v-col>
                   <v-col cols="12">
                     <v-textarea v-model="newQues.explaination" variant="outlined" label="Giải thích" density="compact"
-                      rows="2"></v-textarea>
+                      rows="3"></v-textarea>
                   </v-col>
                 </v-row>
                 <v-btn class="mr-2" color="red" text @click="addQues = false">
