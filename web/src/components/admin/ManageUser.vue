@@ -26,13 +26,13 @@
           <v-divider></v-divider>
 
           <v-row class="content" v-for="(user, index) in users" :key="user.id" :class="{ background: index % 2 == 0 }">
-            <router-link :to="{ name: 'ManageDetailUser', params: { userId: user.id } }">
-              <v-col class="text-center" cols="1">{{ index + 1 }}</v-col>
-              <v-col class="text-center">{{ user.name }}</v-col>
-              <v-col class="text-center" cols="2">{{ user.phone }}</v-col>
-              <v-col class="text-center" cols="3">{{ user.email }}</v-col>
-              <v-col class="text-center" cols="2">{{ user.role }}</v-col>
-            </router-link>
+            <!-- <router-link :to="{ name: 'ManageDetailUser', params: { userId: user.id } }"> -->
+            <v-col class="text-center" cols="1">{{ index + 1 }}</v-col>
+            <v-col class="text-center">{{ user.name }}</v-col>
+            <v-col class="text-center" cols="2">{{ user.phone }}</v-col>
+            <v-col class="text-center" cols="3">{{ user.email }}</v-col>
+            <v-col class="text-center" cols="2">{{ user.role }}</v-col>
+            <!-- </router-link> -->
             <v-col class="text-center" cols="1">
               <v-btn color="warning" @click="(openDialog = true),
                 (action = 'edit'),
@@ -101,11 +101,11 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.main {
+/* .main {
   width: 80%;
   margin: 0px auto;
   padding: 20px 0;
-}
+} */
 
 .content-header {
   width: 80%;

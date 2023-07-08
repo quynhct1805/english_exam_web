@@ -31,6 +31,14 @@
             </v-expansion-panel-title>
 
             <v-expansion-panel-text>
+              <v-expansion-panels v-if="part.paragraph" class="mb-3">
+                <v-expansion-panel>
+                  <v-expansion-panel-title>
+                    <strong>Đoạn văn</strong>
+                  </v-expansion-panel-title>
+                  <v-expansion-panel-text>{{ part.paragraph }}</v-expansion-panel-text>
+                </v-expansion-panel>
+              </v-expansion-panels>
               <div class="question pb-2 pt-2" v-for="(ques, index) in part.questions" :key="ques.id">
                 <v-card-content class="question-content" :key="index">
                   <v-row>
@@ -48,17 +56,17 @@
                           @click="deleteQuestion(ques.id, indexPart)"></v-btn>
                       </div>
                       <v-row class="mt-0">
-                        <v-col cols="auto" class="pe-0">
+                        <v-col cols="auto" class="pe-0 pt-0">
                           <strong> Đáp án: &nbsp;</strong>
                         </v-col>
-                        <v-col class="ps-0">
+                        <v-col class="ps-0 pt-0">
                           <span v-for="(ans, idx) in ques.answers" :class="{
-                              'true-answer': (ans.toLowerCase().split(/\.\s|\./).includes(ques.true_answer.toLowerCase())),
-                            }">{{ ans }}<br />
+                            'true-answer': (ans.toLowerCase().split(/\.\s|\./).includes(ques.true_answer.toLowerCase())),
+                          }">{{ ans }}<br />
                           </span>
                         </v-col>
                       </v-row>
-                      <div class="mt-2" style="font-style: italic">
+                      <div class="mt-2" style="font-style: italic; color: #505050;">
                         {{ ques.explaination }}
                       </div>
                     </v-col>
@@ -68,9 +76,9 @@
               <v-btn class="add-btn included" variant="text" color="#4a7c59" icon="mdi-plus-circle-outline"
                 @click="addNewQues(part.id)"></v-btn>
               <v-form class="add-question" v-if="addQues" v-click-outside="{
-                  handler: onClickOutside,
-                  include,
-                }" @submit.prevent>
+                handler: onClickOutside,
+                include,
+              }" @submit.prevent>
                 <v-card-title>Thêm câu hỏi</v-card-title>
                 <v-row no-gutters>
                   <v-col cols="2">
@@ -118,9 +126,9 @@
         </v-btn>
         <v-card v-if="addPart" class="pt-1 px-4 pb-4">
           <v-form class="add-part" v-click-outside="{
-              handler: onClickOutside,
-              include,
-            }" @submit.prevent>
+            handler: onClickOutside,
+            include,
+          }" @submit.prevent>
             <v-card-title>Thêm bài</v-card-title>
             <v-row no-gutters>
               <v-col cols="2" class="mr-4">
@@ -342,11 +350,11 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.main {
+/* .main {
   width: 80%;
   margin: 0px auto;
   padding: 20px 0;
-}
+} */
 
 .title {
   text-align: center;

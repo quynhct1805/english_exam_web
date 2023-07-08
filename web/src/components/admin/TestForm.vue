@@ -41,7 +41,7 @@
               <v-text-field
                 type="number"
                 v-model="test.time"
-                label="Thời gian *"
+                label="Thời gian (s) *"
                 variant="underlined"
                 :rules="numberRules"
               ></v-text-field>
@@ -176,5 +176,28 @@ function handledClickSave() {
 }
 .v-row .v-col-12 {
   padding: 0 12px;
+}
+
+@media only screen and (max-width: 1280px) {
+  .update-test-form {
+    width: 800px;
+  }
+}
+
+@media only screen and (max-width: 960px) {
+  .update-test-form {
+    width: 550px;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .update-test-form {
+    width: 470px;
+  }
+}
+@media only screen and (max-width: 450px) {
+  .update-test-form {
+    width: 320px;
+  }
 }
 </style>

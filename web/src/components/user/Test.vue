@@ -29,7 +29,7 @@
             {{ part.name }}
           </v-chip>
         </v-chip-group>
-        <div v-for="(part, index) in parts" class="mt-4">
+        <div v-for="(part, index) in parts" class="my-4">
           <v-card
           v-if="part.paragraph && part.id == choosingPart"
           class="pb-4 px-6"
@@ -39,7 +39,7 @@
           </v-card>
         </div>
         <v-card
-          class="do-test mt-4"
+          class="do-test"
           v-for="(question, idx) in questions"
           :key="question.part_id"
         >

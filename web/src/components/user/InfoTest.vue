@@ -176,11 +176,6 @@ const items = ref(["Luyện tập", "Làm full test", "Bình luận"]);
 </script>
 
 <style scoped>
-.main {
-  width: 60%;
-  margin: 0px auto;
-  padding: 20px 12px;
-}
 .main .v-chip {
   color: #4a7c59;
   font-weight:500

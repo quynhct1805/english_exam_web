@@ -12,11 +12,10 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-            <v-btn variant="outlined" :to="{
-              name: 'InfoTest',
-              params: { testId: test.id },
-          }"
-        >
+        <v-btn variant="outlined" :to="{
+          name: 'InfoTest',
+          params: { testId: test.id },
+        }">
           Chi tiết
         </v-btn>
       </v-card-actions>
@@ -58,22 +57,45 @@ onMounted(() => {
 
 <style scoped>
 .test-info {
-  display: flex;
-  margin-top: 40px;
-  padding: 0 20px;
-  justify-content: start;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .test-info .v-card {
-  width: 28%;
-  margin: 0 19px;
-  margin-bottom: 20px;
+  margin: 0 32px;
+  margin-bottom: 28px;
   transition: transform .4s;
 }
 
+@media only screen and (max-width: 1280px) {
+  .test-info {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media only screen and (max-width: 960px) {
+  .test-info {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .test-info .v-card {
+    margin: 0 40px;
+    margin-bottom: 28px;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .test-info {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+  .test-info .v-card {
+    margin: 0 60px;
+    margin-bottom: 28px;
+  }
+}
+
 .test-info .v-card:hover {
-  background-color: rgb(200, 213, 185, 0.1);
+  /* background-color: rgb(200, 213, 185, 0.1); */
+  background-color: white;
   transform: scale(1.1);
 }
 
@@ -89,10 +111,6 @@ onMounted(() => {
   justify-content: start !important;
 }
 
-
-.v-card {
-  transition: opacity .4s ease-in-out;
-}
 
 .show-btns {
   color: rgba(255, 255, 255, 1) !important;

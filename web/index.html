@@ -1,28 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>STUDYENG</title>
-    <style>
-      .v-dialog .v-overlay__content {
-        width: auto !important;
-      }
-      .v-table,
-      .v-table .v-table__wrapper,
-      .v-table .v-table__wrapper table {
-        overflow: hidden !important;
-      }
-      .v-main .v-layout {
-        height: 100%;
-        background-color: #f7f7f7;
-      }
-    </style>
-  </head>
 
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STUDYENG</title>
+  <style>
+    .v-dialog .v-overlay__content {
+      width: auto !important;
+    }
+
+    .v-table,
+    .v-table .v-table__wrapper,
+    .v-table .v-table__wrapper table {
+      overflow: hidden !important;
+    }
+
+    .v-main .v-layout {
+      position: relative;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: black;
+    }
+
+    .v-main::before {
+      content: "";
+      background-image: url('/src/assets/bg3.JPG');
+      background-size: 100% 100%;
+      opacity: 0.5;
+      position: absolute;
+      top: 0px;
+      right: 0px;
+      bottom: 0px;
+      left: 0px;
+    }
+
+    .main {
+      height: 100%;
+      width: 80%;
+      margin: 0px auto;
+      padding: 20px 12px;
+      position: relative;
+    }
+
+    @media only screen and (max-width: 1280px) {
+      .main {
+        width: 100%;
+        margin: 0px auto;
+        padding: 20px 12px;
+      }
+    }
+
+    .v-main .v-layout .v-expansion-panel {
+      color: black !important;
+    }
+
+    .v-expansion-panel--active>.v-expansion-panel-title {
+      background-color: #efffdd;
+    }
+
+    @media only screen and (max-width: 600px) {
+      .main .v-chip-group {
+        padding-left: 12px !important;
+        margin-left: 12px !important;
+      }
+
+      .main .v-container {
+        display: block !important;
+      }
+
+      .main .search-input,
+      .main .select-input {
+        width: 100% !important;
+        margin-bottom: 12px !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app"></div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+
 </html>

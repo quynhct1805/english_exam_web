@@ -74,11 +74,11 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.main {
+/* .main {
   width: 80%;
   margin: 0px auto;
   padding: 20px 0;
-}
+} */
 
 .content-header {
   width: 80%;

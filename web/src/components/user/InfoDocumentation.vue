@@ -2,7 +2,7 @@
   <AppBar />
   <v-layout>
     <div class="main">
-      <DetailDocumentation :id="id"/>
+      <DetailDocumentation :id="id" />
     </div>
   </v-layout>
 </template>
@@ -16,10 +16,4 @@ const props = defineProps({
 });
 </script>
 
-<style scoped>
-.main {
-  width: 60%;
-  margin: 0px auto;
-  padding: 20px 12px;
-}
-</style>
+<style scoped></style>

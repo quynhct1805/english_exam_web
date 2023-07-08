@@ -4,7 +4,8 @@
       :to="logined > 0 ? { name: 'Home' } : { name: 'FirstPage' }"
       class="logo"
     >
-      <img src="@/assets/STUDYENG1.png" height="48" />
+      <img src="@/assets/STUDYENG1.png" class="desktop" height="48" />
+      <img src="@/assets/logomobile.png" class="mobile" height="48" />
     </router-link>
     <v-spacer />
 
@@ -43,7 +44,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 
 const logined = ref(!!localStorage.id);
 const role = ref(localStorage.role);
@@ -83,5 +84,22 @@ const logout = () => localStorage.clear();
 }
 .menu-profile {
   margin-top: 4px;
+}
+
+@media (max-width: 600px) {
+  img.desktop {
+    display: none;
+  }
+  img.mobile {
+    display: block;
+  }
+}
+@media (min-width: 600px) {
+  img.mobile {
+    display: none;
+  }
+  img.desktop {
+    display: block;
+  }
 }
 </style>

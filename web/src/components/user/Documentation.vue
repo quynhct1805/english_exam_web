@@ -2,7 +2,7 @@
   <AppBar />
   <v-layout>
     <div class="main">
-      <v-chip-group>
+      <v-chip-group class='ps-10 ms-10'>
         <v-chip
           v-for="category in categories"
           :key="category.id"
@@ -66,11 +66,6 @@ const onClick = () => {
 </script>
 
 <style scoped>
-.main {
-  width: 60%;
-  margin: 0px auto;
-  padding: 20px 12px;
-}
 .main .v-chip {
   color: #4a7c59;
   font-weight:500

@@ -101,7 +101,7 @@ const routes = [
   {
     path: "/history/:historyId",
     name: "HistoryDetail",
-    component: () => import("@/components/user/HistoryTest"),
+    component: () => import("@/components/common/HistoryTest"),
     props: (router) => ({ id: router.params.historyId }),
   },
 ];

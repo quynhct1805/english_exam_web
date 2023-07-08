@@ -170,11 +170,11 @@ const onClick = () => {
 </script>
 
 <style scoped>
-.main {
+/* .main {
   width: 80%;
   margin: 0px auto;
   padding: 20px 0;
-}
+} */
 .content-header {
   width: 80%;
   margin: 0px auto;
@@ -192,11 +192,11 @@ const onClick = () => {
 .main .select-input {
   width: 20%;
 }
-
+/* 
 .documentation-info {
   display: flex;
   margin-top: 40px;
-}
+} */
 .v-row a {
   display: contents;
   color: black;

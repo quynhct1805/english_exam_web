@@ -69,12 +69,12 @@
       <v-card>
         <v-table class="manage-test" :key="items.length">
           <v-row class="title">
-            <v-col class="text-center" cols="1">STT</v-col>
-            <v-col class="text-center" cols="2">Thể loại</v-col>
+            <v-col class="text-center stt" cols="1">STT</v-col>
+            <v-col class="text-center cate" cols="2">Thể loại</v-col>
             <v-col class="text-center">Đề</v-col>
-            <v-col class="text-center" cols="2">Kỹ năng</v-col>
-            <v-col class="text-center" cols="2">Tổng số bài</v-col>
-            <v-col class="text-center" cols="2">Tổng thời gian (s)</v-col>
+            <v-col class="text-center skill" cols="2">Kỹ năng</v-col>
+            <v-col class="text-center total-part" cols="2">Tổng số bài</v-col>
+            <v-col class="text-center time" cols="2">Tổng thời gian (s)</v-col>
             <v-col class="text-center" cols="1"></v-col>
           </v-row>
           <v-divider></v-divider>
@@ -88,14 +88,14 @@
             <router-link
               :to="{ name: 'ManageDetailTest', params: { testId: test.id } }"
             >
-              <v-col class="text-center" cols="1">{{ index + 1 }}</v-col>
-              <v-col class="text-center" cols="2">{{
+              <v-col class="text-center stt" cols="1">{{ index + 1 }}</v-col>
+              <v-col class="text-center cate" cols="2">{{
                 test.category_code
               }}</v-col>
               <v-col class="text-center">{{ test.name }}</v-col>
-              <v-col class="text-center" cols="2">{{ test.skill }}</v-col>
-              <v-col class="text-center" cols="2">{{ test.total_part }}</v-col>
-              <v-col class="text-center" cols="2">{{ test.time }}</v-col>
+              <v-col class="text-center skill" cols="2">{{ test.skill }}</v-col>
+              <v-col class="text-center total-part" cols="2">{{ test.total_part }}</v-col>
+              <v-col class="text-center time" cols="2">{{ test.time }}</v-col>
             </router-link>
             <v-col class="text-center" cols="1">
               <v-btn
@@ -247,11 +247,11 @@ watch(filterSkill, (newVal) => {
 </script>
 
 <style scoped>
-.main {
+/* .main {
   width: 80%;
   margin: 0px auto;
   padding: 20px 0;
-}
+} */
 .content-header {
   width: 80%;
   margin: 0px auto;
@@ -302,5 +302,14 @@ watch(filterSkill, (newVal) => {
 
 .background {
   background-color: #faf3dd;
+}
+
+@media only screen and (max-width: 600px) {
+  .stt {display: none;}
+  .cate {max-width: fit-content}
+  .skill {max-width: fit-content;}
+}
+@media only screen and (max-width: 450px) {
+  .stt, .total-part, .time {display: none;}
 }
 </style>

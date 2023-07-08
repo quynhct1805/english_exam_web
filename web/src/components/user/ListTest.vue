@@ -2,50 +2,21 @@
   <AppBar />
   <v-layout>
     <div class="main">
-      <v-chip-group>
-        <v-chip
-          v-for="category in categories"
-          :key="category.id"
-          variant="outlined"
-          :value="`${category.id}`"
-        >
+      <v-chip-group class='ps-10 ms-10'>
+        <v-chip v-for="category in categories" :key="category.id" variant="outlined" :value="`${category.id}`">
           {{ category.code }}
         </v-chip>
       </v-chip-group>
-      <v-container style="display: flex; margin-bottom: 12px">
-        <v-text-field
-          class="search-input"
-          :loading="loading"
-          v-model="search"
-          variant="underlined"
-          label="Nhập từ khoá tìm kiếm: tên đề"
-          prepend-inner-icon="mdi-magnify"
-          hide-no-data
-          single-line
-          hide-details
-        ></v-text-field>
+      <v-container>
+        <v-text-field class="search-input" :loading="loading" v-model="search" variant="underlined"
+          label="Nhập từ khoá tìm kiếm: tên đề" prepend-inner-icon="mdi-magnify" hide-no-data single-line
+          hide-details></v-text-field>
         <v-spacer />
-        <v-select
-          v-model="filterSkill"
-          class="select-input"
-          label="Chọn kỹ năng"
-          :items="skill"
-          variant="underlined"
-          hide-details
-          clearable
-        ></v-select>
+        <v-select v-model="filterSkill" class="select-input" label="Chọn kỹ năng" :items="skill" variant="underlined"
+          hide-details clearable></v-select>
         <v-spacer />
-        <v-select
-          v-model="filterCate"
-          class="select-input"
-          label="Chọn thể loại đề"
-          :items="categories"
-          item-title="code"
-          item-value="code"
-          variant="underlined"
-          hide-details
-          clearable
-        ></v-select>
+        <v-select v-model="filterCate" class="select-input" label="Chọn thể loại đề" :items="categories" item-title="code"
+          item-value="code" variant="underlined" hide-details clearable></v-select>
       </v-container>
       <ListTest :items="items" />
     </div>
@@ -117,7 +88,7 @@ watch(filterSkill, (newVal) => {
     items.value = JSON.parse(JSON.stringify(tests.value)).filter((e) => {
       return (
         (e.skill || "").toLowerCase().indexOf((newVal || "").toLowerCase()) >
-          -1 &&
+        -1 &&
         (e.category_code || "")
           .toLowerCase()
           .indexOf((filterCate.value || "").toLowerCase()) > -1
@@ -134,22 +105,42 @@ watch(filterSkill, (newVal) => {
 </script>
 
 <style scoped>
-.main {
-  width: 60%;
-  margin: 0px auto;
-  padding: 20px 12px;
-}
 .main .v-chip {
   color: #4a7c59;
-  font-weight:500
+  font-weight: 500
 }
+
+.main .v-container {
+  display: flex;
+  margin-bottom: 12px
+}
+
 .main .v-chip:hover {
   background-color: #e8ebf3;
 }
+
 .main .search-input {
   width: 40%;
 }
+
 .main .select-input {
   width: 20%;
 }
+/* 
+@media only screen and (max-width: 600px) {
+  .main .v-chip-group {
+    padding-left: 12px !important;
+    margin-left: 12px !important;
+  }
+
+  .main .v-container {
+    display: block;
+  }
+
+  .main .search-input,
+  .main .select-input {
+    width: 100%;
+    margin-bottom: 12px;
+  }
+} */
 </style>

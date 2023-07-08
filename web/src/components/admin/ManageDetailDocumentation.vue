@@ -97,11 +97,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.main {
-  width: 60%;
-  margin: 0px auto;
-  padding: 20px 12px;
-}
 
 .update-documentation-form {
   width: 70vw;
