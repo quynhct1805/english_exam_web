@@ -13,6 +13,7 @@
         v-model="user.email"
         placeholder="Nhập email"
         label="Email"
+        :disabled="user.id"
       ></v-text-field>
       <label style="display: none">Message</label>
       <v-text-field
@@ -22,7 +23,7 @@
       ></v-text-field>
       <v-card-actions>
         <v-btn variant="outlined" @click="backBtn()" color="blue-grey-darken-4">
-          Back
+          Quay lại
         </v-btn>
         <v-spacer />
         <v-btn
@@ -100,31 +101,41 @@ export default {
 
   methods: {
     sendEmail() {
-      for (const user of JSON.parse(JSON.stringify(this.users))) {
-        if (user.email === this.user.email) {
-          this.user = user;
+      const tempUser = ref({})
+      console.log(JSON.parse(JSON.stringify(this.users)))
+      for (const Tuser of JSON.parse(JSON.stringify(this.users))) {
+        if (Tuser.email === this.user.email) {
+          console.log(this.user.email)
+          tempUser.value = JSON.parse(JSON.stringify(Tuser))
+          this.user = Tuser;
         }
       }
-      const tempUser = JSON.parse(JSON.stringify(this.user));
-      const param = _.omit(tempUser, "id");
-      param["code"] = this.result;
-      api.patch(`/api/users/${tempUser.id}`, param);
-      emailjs
-        .sendForm(
-          "service_o30mpo7",
-          "template_gkmtlzj",
-          this.$refs.form,
-          "3u1T_sU4lZjzA78Fo"
-        )
-        .then(
-          (result) => {
-            console.log("SUCCESS!", result.text);
-          },
-          (error) => {
-            console.log("FAILED...", error.text);
-          }
-        );
-      this.snackbar = true;
+      console.log(JSON.parse(JSON.stringify(tempUser.value)))
+      // const tempUser = JSON.parse(JSON.stringify(this.user));
+      if (!_.isEmpty(JSON.parse(JSON.stringify(tempUser.value)))) {
+        const param = _.omit(tempUser, "id");
+        param["code"] = this.result;
+        api.patch(`/api/users/${tempUser.id}`, param);
+        emailjs
+          .sendForm(
+            "service_o30mpo7",
+            "template_gkmtlzj",
+            this.$refs.form,
+            "3u1T_sU4lZjzA78Fo"
+          )
+          .then(
+            (result) => {
+              console.log("SUCCESS!", result.text);
+            },
+            (error) => {
+              console.log("FAILED...", error.text);
+            }
+          );
+        this.snackbar = true;
+      } else {
+        this.noti = 'Email chưa tồn tại. Vui lòng kiểm tra lại thông tin đã nhập!'
+        this.snackbar = true;
+      }
     },
 
     makeid(length) {

@@ -27,12 +27,12 @@
           <div v-for="part in parts" :key="part.id" class="mb-5 mt-2">
             <strong style="text-transform: uppercase">{{ part.name }}</strong>
             <div
-              class="question mb-3"
-              v-for="(question, index) in part.questions"
-              :key="question.id"
+            class="question mb-3"
+            v-for="(question, index) in part.questions"
+            :key="question.id"
             >
-              <div>
-                <strong>{{ question.name }}</strong
+            <div>
+              <strong>{{ question.name }}</strong
                 >. {{ question.question }}
               </div>
               <div
@@ -52,7 +52,7 @@
                 v-for="(ans, idx) in question.answers"
                 :class="{
                   'wrong-answer':
-                    idx + 1 == history.answers[parseInt(question.name) - 1],
+                    ans === history.answers[parseInt(question.name) - 1],
                   'true-answer': (ans.toLowerCase().split(/\.\s|\./).includes(question.true_answer.toLowerCase())),
                 }"
                 >{{ ans }} &emsp;

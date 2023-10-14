@@ -99,8 +99,8 @@ onMounted(() => {
 
 <style scoped>
 .v-layout {
-  background-color: white;
-  margin-top: 16px;
+  /* background-color: white; */
+  /* margin-top: 16px; */
 }
 .main {
   width: 800px;

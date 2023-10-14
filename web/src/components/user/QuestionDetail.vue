@@ -14,7 +14,7 @@
       <div style="color: green">
         Đáp án đúng:
         <span v-for="(ans, idx) in questionDetail.answers">
-          <span v-if="idx + 1 == questionDetail.true_answer">
+          <span v-if="ans.toLowerCase().split(/\.\s|\./).includes(questionDetail.true_answer.toLowerCase())">
             {{ ans }}
           </span>
         </span>

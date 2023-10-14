@@ -13,7 +13,7 @@
               <v-text-field
                 v-model="user.name"
                 label="Tên người dùng *"
-                clearable
+                :clearable="action === 'add' ? true : false"
                 variant="underlined"
                 :rules="textRules"
                 :readonly="action === 'edit' ? true : false"
@@ -25,7 +25,7 @@
                 type="password"
                 v-model="user.password"
                 label="Mật khẩu *"
-                clearable
+                :clearable="action === 'add' ? true : false"
                 variant="underlined"
                 :rules="passwordRules"
                 :readonly="action === 'edit' ? true : false"
@@ -35,7 +35,7 @@
               <v-text-field
                 v-model="user.email"
                 label="Email *"
-                clearable
+                :clearable="action === 'add' ? true : false"
                 variant="underlined"
                 :rules="emailRules"
                 :readonly="action === 'edit' ? true : false"
@@ -45,7 +45,7 @@
               <v-text-field
                 v-model="user.phone"
                 label="Số điện thoại *"
-                clearable
+                :clearable="action === 'add' ? true : false"
                 variant="underlined"
                 :rules="phoneRules"
                 :readonly="action === 'edit' ? true : false"

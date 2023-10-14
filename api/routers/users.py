@@ -70,6 +70,7 @@ async def get_user(user_id: int):
         Histories.select(Histories, Tests.name.alias("test"))
         .join(Tests, on=Tests.id == Histories.test_id)
         .where(Histories.user_id == user_id)
+        .order_by(Histories.created_at.desc())
         .dicts()
     )
     user = users[0] if len(users) > 0 else None

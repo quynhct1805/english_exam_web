@@ -52,11 +52,11 @@ const userId = ref(localStorage.id);
 const pages = ref([
   {
     page: role.value === "admin" ? "ManageTest" : "ListTest",
-    label: "Đề thi online",
+    label: role.value === "admin" ? "Quản lý đề thi" : "Đề thi online",
   },
   {
     page: role.value === "admin" ? "ManageDocumentation" : "Documentation",
-    label: "Tài liệu tham khảo",
+    label: role.value === "admin" ? "Quản lý tài liệu" : "Tài liệu tham khảo",
   },
 ]);
 

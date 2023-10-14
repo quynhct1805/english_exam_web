@@ -12,15 +12,17 @@
             <div class="title text-h5 my-8" v-if="role === 'member'">
               Đề thi mới nhất
             </div>
-            <div class="title text-h5 my-8" v-else>Đề thi</div>
-            <ListTest />
+            <div class="title text-h5 mt-8" v-else>Đề thi</div>
+            <v-btn class="btn-display mb-8" size="x-small" variant="outlined" color="#4a7c59" @click="() => changeDisplay('test')">{{labelBtn}}</v-btn>
+            <ListTest v-if="showMoreTest"/>
           </div>
           <div class="list-documentation">
             <div class="title text-h5 my-8" v-if="role === 'member'">
               Tài liệu mới nhất
             </div>
-            <div class="title text-h5 my-8" v-else>Tài liệu</div>
-            <Documentation />
+            <div class="title text-h5 mt-8" v-else>Tài liệu</div>
+            <v-btn class="btn-display mb-8" size="x-small" variant="outlined" color="#4a7c59" @click="() => changeDisplay('doc')">{{labelBtn}}</v-btn>
+            <Documentation v-if="showMoreDoc"/>
           </div>
         </div>
       </v-col>
@@ -50,6 +52,15 @@ const icons = ref([
   "mdi-instagram",
 ]);
 const role = ref(localStorage.role);
+
+const showMoreTest = ref(true)
+const showMoreDoc = ref(true)
+const labelBtn = ref('show less')
+
+const changeDisplay = (field) => {
+  field === 'test' ? showMoreTest.value = !showMoreTest.value : showMoreDoc.value = !showMoreDoc.value
+  labelBtn.value = (showMoreTest.value || showMoreDoc.value) ? 'show less' : 'show more'
+}
 
 onMounted(() => {
   getTests();
@@ -82,5 +93,10 @@ onMounted(() => {
 .v-footer {
   background-color: #4a7c59;
   color: white;
+}
+
+.btn-display {
+  display: flex;
+  margin: auto
 }
 </style>

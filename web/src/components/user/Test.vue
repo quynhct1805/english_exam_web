@@ -59,7 +59,7 @@
                 <v-radio
                   v-for="(ans, idx) in ques.answers"
                   :label="ans"
-                  :value="idx + 1"
+                  :value="ques.answers[idx]"
                 ></v-radio>
               </v-radio-group>
             </v-card-content>
@@ -193,16 +193,16 @@ const submitBtn = () => {
 const checkAnswers = () => {
   const totalQues = JSON.parse(JSON.stringify(test.value)).total_ques;
   const grade = ref(0);
-  const tempUserAnswers = JSON.parse(JSON.stringify(userAnswers.value));
+  const tempUserAnswers = JSON.parse(JSON.stringify(userAnswers.value.slice(1, userAnswers.value.length)));
   const tempTrueAnswers = JSON.parse(JSON.stringify(trueAnswers.value));
-  for (const index in tempTrueAnswers) {
-    if (tempTrueAnswers[index] == tempUserAnswers[parseInt(index) + 1]) {
+  for (const index in tempUserAnswers) {
+    if (!!tempUserAnswers[index] && tempUserAnswers[index].toLowerCase().split(/\.\s|\./).includes(tempTrueAnswers[index]?.toLowerCase())) {
       grade.value += 1;
     }
   }
   result.value.time = timeElapsed.value;
   result.value.grade = `${grade.value}/${totalQues}`;
-  result.value.answers = tempUserAnswers.slice(1, tempUserAnswers.length);
+  result.value.answers = tempUserAnswers;
 };
 
 onMounted(() => {

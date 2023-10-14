@@ -60,6 +60,7 @@ async def get_category(category_id):
     status_code=200,
 )
 async def create_category(payload_: CategoryPostRequest):
+    # category = Categories.select(Categories.name).where('e' in Categories.name)
     category_codes = Categories.select(Categories.code).dicts()
     category_codes = list(category_codes)
     print("hi", category_codes)
